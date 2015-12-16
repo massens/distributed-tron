@@ -116,19 +116,7 @@ public class ServidorNIO extends Thread implements Observer {
         model.updateDireccio(Character.getNumericValue(entrada.charAt(0)), userId);
         
     }
-    
-//    public void ferEcho(SelectionKey clau) throws IOException {
-//
-//        SocketChannel s = ((SocketChannel) clau.channel());
-//        ByteBuffer espai = ByteBuffer.allocate(1024);
-//        s.read(espai);
-//        System.out.println("ECHO!" + espai);
-//
-//        espai.flip();
-//        while (espai.hasRemaining()) {
-//            s.write(espai);
-//        }
-//    }
+
 
     @Override
     public void update(Observable o, Object arg) {
@@ -144,9 +132,13 @@ public class ServidorNIO extends Thread implements Observer {
 
             Charset charset = Charset.forName("UTF-8");
             CharsetEncoder codificador = charset.newEncoder();
-            ByteBuffer bb;
-            bb = codificador.encode(CharBuffer.wrap(s));
-            arraySocketChannels.get(0).write(bb);
+            ByteBuffer bb0 = codificador.encode(CharBuffer.wrap(s));
+            ByteBuffer bb1 = codificador.encode(CharBuffer.wrap(s));
+            
+            if (arraySocketChannels.size() > 1){
+                arraySocketChannels.get(0).write(bb0);
+                arraySocketChannels.get(1).write(bb1);
+            }
         } catch (Exception ex) {
             Logger.getLogger(ServidorNIO.class.getName()).log(Level.SEVERE, null, ex);
         }

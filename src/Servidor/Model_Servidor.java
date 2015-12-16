@@ -32,7 +32,6 @@ public class Model_Servidor extends Observable{
 	int windowWidth;
 
 	//Quant avançen a cada "refrescada"
-	int moveAmount;
 	ArrayList<Integer> pathx1;
 	ArrayList<Integer> pathy1;
 	ArrayList<Integer> pathx2;
@@ -55,7 +54,6 @@ public class Model_Servidor extends Observable{
 
 
 		//Quant avançen a cada "refrescada"
-		moveAmount = 5;
 		pathx1 = new ArrayList<Integer>();
 		pathy1 = new ArrayList<Integer>();
 		pathx2 = new ArrayList<Integer>();
@@ -98,28 +96,28 @@ public class Model_Servidor extends Observable{
 		switch(currentDirection1){
 		case Const.UP:
 			if (centrey1>0){
-			centrey1-=moveAmount;
+			centrey1-=Const.STEP;
 			} else {
 				centrey1 = windowHeight;
 			}
 			break;
 		case Const.RIGHT:
 			if (centrex1 < windowWidth){
-			centrex1+=moveAmount;
+			centrex1+=Const.STEP;
 			} else {
 				centrex1 = 0;
 			}
 			break;
 		case Const.DOWN:
 			if (centrey1 < windowHeight){
-			centrey1+=moveAmount;
+			centrey1+=Const.STEP;
 			} else {
 				centrey1 = 0;
 			}
 			break;
 		case Const.LEFT:
 			if (centrex1>0){
-			centrex1-=moveAmount;
+			centrex1-=Const.STEP;
 			} else {
 				centrex1 = windowWidth;
 			}
@@ -130,28 +128,28 @@ public class Model_Servidor extends Observable{
 		switch(currentDirection2){
 		case Const.UP:
 			if (centrey2>0){
-			centrey2-=moveAmount;
+			centrey2-=Const.STEP;
 			} else {
 				centrey2 = windowHeight;
 			}
 			break;
 		case Const.RIGHT:
 			if (centrex2 < windowWidth){
-			centrex2+=moveAmount;
+			centrex2+=Const.STEP;
 			} else {
 				centrex2 = 0;
 			}
 			break;
 		case Const.DOWN:
 			if (centrey2 < windowHeight){
-				centrey2+=moveAmount;
+				centrey2+=Const.STEP;
 			} else {
 				centrey2 = 0;
 			}
 			break;
 		case Const.LEFT:
 			if (centrex2>0){
-			centrex2-=moveAmount;
+			centrex2-=Const.STEP;
 			} else {
 				centrex2 = windowWidth;
 			}

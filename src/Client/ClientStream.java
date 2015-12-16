@@ -69,6 +69,7 @@ public class ClientStream { //implements Comunicacions {
             System.out.println("Missatge rebut" + missatge);
 
         } catch (Exception e) {
+            
         }
         directions[0] = Character.getNumericValue(missatge.charAt(0));
         directions[1] = Character.getNumericValue(missatge.charAt(1));
