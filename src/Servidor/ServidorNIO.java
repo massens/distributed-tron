@@ -17,8 +17,14 @@ import java.util.Iterator;
 import java.util.Set;
 import Utils.Comms;
 import java.net.ServerSocket;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -29,10 +35,14 @@ public class ServidorNIO extends Thread implements Observer {
     protected ServerSocketChannel ssc;
     protected ServerSocket ss;
     protected Selector selector;
+    
+    protected ArrayList<SocketChannel> arraySocketChannels;
 
     public ServidorNIO(int port, Model_Servidor model) throws IOException {
         this.model = model;
         model.addObserver(this);
+        
+        arraySocketChannels = new ArrayList<SocketChannel>();
         
         ssc = ServerSocketChannel.open();
         ssc.configureBlocking(false); //Configurem que NO bloquejant
@@ -65,7 +75,7 @@ public class ServidorNIO extends Thread implements Observer {
                         // Fer echo
                         //  
 
-                        ferEcho(clau);
+                        rebre(clau);
                     }
                     iterador.remove();
                 }
@@ -82,24 +92,65 @@ public class ServidorNIO extends Thread implements Observer {
         SocketChannel s = ((ServerSocketChannel) clau.channel()).accept();
         s.configureBlocking(false);
         s.register(selector, SelectionKey.OP_READ);
+        
+        arraySocketChannels.add(s);
     }
 
-    public void ferEcho(SelectionKey clau) throws IOException {
-
+    public void rebre(SelectionKey clau) throws IOException{
         SocketChannel s = ((SocketChannel) clau.channel());
         ByteBuffer espai = ByteBuffer.allocate(1024);
         s.read(espai);
-        System.out.println("ECHO!" + espai);
-
+        
+        
+        int userId = arraySocketChannels.indexOf(s);
+        
+        Charset charset = Charset.forName("UTF-8");
+        CharsetDecoder decodificador = charset.newDecoder();     
         espai.flip();
-        while (espai.hasRemaining()) {
-            s.write(espai);
-        }
+        
+        StringBuffer sb = new StringBuffer();
+        sb.append(decodificador.decode(espai));    
+        String entrada = new String(sb);
+        
+        System.out.println("Entrada: " + entrada + "User: "+userId);
+        model.updateDireccio(Character.getNumericValue(entrada.charAt(0)), userId);
+        
     }
+    
+//    public void ferEcho(SelectionKey clau) throws IOException {
+//
+//        SocketChannel s = ((SocketChannel) clau.channel());
+//        ByteBuffer espai = ByteBuffer.allocate(1024);
+//        s.read(espai);
+//        System.out.println("ECHO!" + espai);
+//
+//        espai.flip();
+//        while (espai.hasRemaining()) {
+//            s.write(espai);
+//        }
+//    }
 
     @Override
     public void update(Observable o, Object arg) {
         //Fer broadcast a tothome!! Com el fer echo, però a tothom
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int[] dir = (int[]) arg;
+        System.out.println("Update: "+ dir[0]+dir[1]);
+            
+        String s = String.format("%d%d", dir[0], dir[1]);
+        
+        try {
+
+            System.out.println("Broadcast" + s);
+
+            Charset charset = Charset.forName("UTF-8");
+            CharsetEncoder codificador = charset.newEncoder();
+            ByteBuffer bb;
+            bb = codificador.encode(CharBuffer.wrap(s));
+            arraySocketChannels.get(0).write(bb);
+        } catch (Exception ex) {
+            Logger.getLogger(ServidorNIO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        
     }
 }

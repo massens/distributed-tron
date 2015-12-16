@@ -25,11 +25,11 @@ public class ClientStream { //implements Comunicacions {
 
     }
 
-    public void enviar(int provisional_Direction1, int provisional_Direction2) {
+    public void enviar(int provisional_Direction1) {
         try {
 
       //Formatejem les dos int a un string. 
-            String s = String.format("%d%d", provisional_Direction1, provisional_Direction2);
+            String s = String.format("%d", provisional_Direction1);
 
             System.out.println("envia " + s);
 
