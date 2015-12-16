@@ -13,7 +13,6 @@ public class Controlador_Client implements KeyListener{
 	protected Model_Client model;
 
 	protected int provisional_Direction1;
-	protected int provisional_Direction2;
 
 	protected Timer t;
 
@@ -30,7 +29,6 @@ public class Controlador_Client implements KeyListener{
 
 
 		provisional_Direction1 = Const.NOACTION;
-		provisional_Direction2 = Const.NOACTION;
 
 		//Funcio Update
 		t = new Timer();
@@ -38,7 +36,7 @@ public class Controlador_Client implements KeyListener{
 	}
 
 	public void inici(){
-		t.scheduleAtFixedRate(new UpdateTasca(), 2000, 20);
+		t.scheduleAtFixedRate(new UpdateTasca(), 0, 20);
 	}
 
 	public void keyPressed(KeyEvent e) {
@@ -59,23 +57,23 @@ public class Controlador_Client implements KeyListener{
 				provisional_Direction1 = Const.LEFT;
 				}
 		}
-		if (e.getKeyCode() == KeyEvent.VK_W){
-			if (provisional_Direction2 != Const.DOWN){
-			provisional_Direction2 = Const.UP;
-			}
-		} else if (e.getKeyCode() == KeyEvent.VK_S) {
-			if (provisional_Direction2 != Const.UP){
-				provisional_Direction2 = Const.DOWN;
-				}
-		} else if (e.getKeyCode() == KeyEvent.VK_D) {
-			if (provisional_Direction2 != Const.LEFT){
-				provisional_Direction2 = Const.RIGHT;
-				}
-		} else if (e.getKeyCode() == KeyEvent.VK_A) {
-			if (provisional_Direction2 != Const.RIGHT){
-				provisional_Direction2 = Const.LEFT;
-				}
-		}
+//		if (e.getKeyCode() == KeyEvent.VK_W){
+//			if (provisional_Direction2 != Const.DOWN){
+//			provisional_Direction2 = Const.UP;
+//			}
+//		} else if (e.getKeyCode() == KeyEvent.VK_S) {
+//			if (provisional_Direction2 != Const.UP){
+//				provisional_Direction2 = Const.DOWN;
+//				}
+//		} else if (e.getKeyCode() == KeyEvent.VK_D) {
+//			if (provisional_Direction2 != Const.LEFT){
+//				provisional_Direction2 = Const.RIGHT;
+//				}
+//		} else if (e.getKeyCode() == KeyEvent.VK_A) {
+//			if (provisional_Direction2 != Const.RIGHT){
+//				provisional_Direction2 = Const.LEFT;
+//				}
+//		}
 	}
 
 	public void keyReleased(KeyEvent e) {}
@@ -84,12 +82,11 @@ public class Controlador_Client implements KeyListener{
 		public void run(){
 
 			//Aquest Update ha de ser el que es
-			comunicacions.enviar(provisional_Direction1,provisional_Direction2);
+			comunicacions.enviar(provisional_Direction1);
 			// model.updateDireccio(provisional_Direction1, provisional_Direction2);
 
 
 			provisional_Direction1 = Const.NOACTION;
-			provisional_Direction2 = Const.NOACTION;
 		}
 	}
 

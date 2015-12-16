@@ -74,10 +74,14 @@ public class Model_Servidor extends Observable{
 
 	//Setters
 
-	public void updateDireccio(int provisional_Direction1, int provisional_Direction2){
-		if ( provisional_Direction1 != Const.NOACTION) currentDirection1 = provisional_Direction1;
-		if ( provisional_Direction2 != Const.NOACTION) currentDirection2 = provisional_Direction2;
-		dibuixaLineas();
+	//public void updateDireccio(int provisional_Direction1, int provisional_Direction2){
+        public void updateDireccio(int provisional_Direction, int userId){
+		if ( provisional_Direction != Const.NOACTION){
+                    if ( userId == 0 ) currentDirection1 = provisional_Direction;
+                    if ( userId == 1 ) currentDirection2 = provisional_Direction;
+                }
+                avisarObservadors();
+                //dibuixaLineas();
 	}
 
 	public void setWindowSize(int windowWidth, int windowHeight){
@@ -87,6 +91,7 @@ public class Model_Servidor extends Observable{
 
 	//Funcions especials per tractar dades
 	public void dibuixaLineas(){
+            
                 System.out.println("Dibuixa Lineas amb direccions: "+ currentDirection1 +" "+currentDirection2);
 		//JUGADOR 1
                 
@@ -187,7 +192,10 @@ public class Model_Servidor extends Observable{
 
 	protected void avisarObservadors(){
 		setChanged();
-		notifyObservers();
+                int[] dir = new int[2];
+                dir[0] = currentDirection1;
+                dir[1] = currentDirection2;
+		notifyObservers(dir);
 	}
 
 

@@ -159,8 +159,8 @@ public class Model_Client extends Observable{
 		pathx2.add(centrex2);
 		pathy2.add(centrey2);
 
-                System.out.println("Pathx1 : "+pathx1);
-                System.out.println("Pathx1 : "+pathy1);
+//                System.out.println("Pathx1 : "+pathx1);
+//                System.out.println("Pathx1 : "+pathy1);
 
 		//Avisa a la Vista_Client
 		avisarObservadors();
