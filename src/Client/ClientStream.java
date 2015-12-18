@@ -1,27 +1,20 @@
 package Client;
 
 import Utils.*;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
+import java.net.*;
+import java.nio.*;
 import java.nio.channels.SocketChannel;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CharsetEncoder;
+import java.nio.charset.*;
+
 
 public class ClientStream { //implements Comunicacions {
 
     protected SocketChannel sc;
-    protected BufferedReader teclat;
 
     public ClientStream(int port) throws UnknownHostException, IOException {
         sc = SocketChannel.open(new InetSocketAddress(2222));
         sc.configureBlocking(true);
-        teclat = new BufferedReader(new InputStreamReader(System.in));
 
     }
 

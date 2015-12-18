@@ -1,4 +1,5 @@
 package Client;
+import Patrons.ModelTron;
 import Utils.*;
 
 import java.util.ArrayList;
@@ -6,7 +7,8 @@ import java.util.ArrayList;
 import java.util.*;
 
 public class Model_Client extends Observable{
-	
+
+    
 	int centrex1;
 	int centrey1;
 	int centrex2;
@@ -15,10 +17,6 @@ public class Model_Client extends Observable{
 	//Direcció inicial
 	int currentDirection1;
 	int currentDirection2;
-
-	//Mides de la finestra
-	int windowHeight;
-	int windowWidth;
 
 	//Quant avançen a cada "refrescada"
 	ArrayList<Integer> pathx1;
@@ -50,9 +48,8 @@ public class Model_Client extends Observable{
 
 
 	}
-
-
-	//Getters
+        
+        //Getters
 
 	public ArrayList<Integer> getPathX1(){ return pathx1; }
 	public ArrayList<Integer> getPathY1(){ return pathy1; }
@@ -67,11 +64,6 @@ public class Model_Client extends Observable{
 		dibuixaLineas();
 	}
 
-	public void setWindowSize(int windowWidth, int windowHeight){
-		this.windowHeight = windowHeight;
-		this.windowWidth = windowWidth;
-	}
-
 	//Funcions especials per tractar dades
 	public void dibuixaLineas(){
                 System.out.println("Dibuixa Lineas amb direccions: "+ currentDirection1 +" "+currentDirection2);
@@ -82,18 +74,18 @@ public class Model_Client extends Observable{
 			if (centrey1>0){
 			centrey1-=Const.STEP;
 			} else {
-				centrey1 = windowHeight;
+				centrey1 = Const.SCREENX;
 			}
 			break;
 		case Const.RIGHT:
-			if (centrex1 < windowWidth){
+			if (centrex1 < Const.SCREENY){
 			centrex1+=Const.STEP;
 			} else {
 				centrex1 = 0;
 			}
 			break;
 		case Const.DOWN:
-			if (centrey1 < windowHeight){
+			if (centrey1 < Const.SCREENY){
 			centrey1+=Const.STEP;
 			} else {
 				centrey1 = 0;
@@ -103,7 +95,7 @@ public class Model_Client extends Observable{
 			if (centrex1>0){
 			centrex1-=Const.STEP;
 			} else {
-				centrex1 = windowWidth;
+				centrex1 = Const.SCREENX;
 			}
 			break;
 		}
@@ -114,18 +106,18 @@ public class Model_Client extends Observable{
 			if (centrey2>0){
 			centrey2-=Const.STEP;
 			} else {
-				centrey2 = windowHeight;
+				centrey2 = Const.SCREENY;
 			}
 			break;
 		case Const.RIGHT:
-			if (centrex2 < windowWidth){
+			if (centrex2 < Const.SCREENX){
 			centrex2+=Const.STEP;
 			} else {
 				centrex2 = 0;
 			}
 			break;
 		case Const.DOWN:
-			if (centrey2 < windowHeight){
+			if (centrey2 < Const.SCREENY){
 				centrey2+=Const.STEP;
 			} else {
 				centrey2 = 0;
@@ -135,7 +127,7 @@ public class Model_Client extends Observable{
 			if (centrex2>0){
 			centrex2-=Const.STEP;
 			} else {
-				centrex2 = windowWidth;
+				centrex2 = Const.SCREENX;
 			}
 			break;
 		}
@@ -176,6 +168,4 @@ public class Model_Client extends Observable{
 		setChanged();
 		notifyObservers();
 	}
-
-
 }

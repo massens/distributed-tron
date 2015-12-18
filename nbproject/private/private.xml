@@ -5,14 +5,12 @@
         <group>
             <file>file:/Users/marcassens/Dropbox/1_UNIVERSITAT/3A/SC/Projecte%20SC/Tron_CopiaMarcGuillem_Servidor/src/Client/Vista_Client.java</file>
             <file>file:/Users/marcassens/Dropbox/1_UNIVERSITAT/3A/SC/Projecte%20SC/Tron_CopiaMarcGuillem_Servidor/src/Client/ClientStream.java</file>
-            <file>file:/Users/marcassens/Dropbox/1_UNIVERSITAT/3A/SC/Projecte%20SC/Tron_CopiaMarcGuillem_Servidor/src/tron_copiamarcguillem_servidor/LogGuillemMarc.txt</file>
-            <file>file:/Users/marcassens/Dropbox/1_UNIVERSITAT/3A/SC/Projecte%20SC/Tron_CopiaMarcGuillem_Servidor/src/Utils/Const.java</file>
-            <file>file:/Users/marcassens/Dropbox/1_UNIVERSITAT/3A/SC/Projecte%20SC/Tron_CopiaMarcGuillem_Servidor/src/Client/Controlador_Client.java</file>
             <file>file:/Users/marcassens/Dropbox/1_UNIVERSITAT/3A/SC/Projecte%20SC/Tron_CopiaMarcGuillem_Servidor/src/Client/Model_Client.java</file>
+            <file>file:/Users/marcassens/Dropbox/1_UNIVERSITAT/3A/SC/Projecte%20SC/Tron_CopiaMarcGuillem_Servidor/src/Patrons/ModelAbstracte.java</file>
+            <file>file:/Users/marcassens/Dropbox/1_UNIVERSITAT/3A/SC/Projecte%20SC/Tron_CopiaMarcGuillem_Servidor/src/Client/Controlador_Client.java</file>
             <file>file:/Users/marcassens/Dropbox/1_UNIVERSITAT/3A/SC/Projecte%20SC/Tron_CopiaMarcGuillem_Servidor/src/Servidor/Model_Servidor.java</file>
-            <file>file:/Users/marcassens/Dropbox/1_UNIVERSITAT/3A/SC/Projecte%20SC/Tron_CopiaMarcGuillem_Servidor/src/Servidor/Servidor.java</file>
             <file>file:/Users/marcassens/Dropbox/1_UNIVERSITAT/3A/SC/Projecte%20SC/Tron_CopiaMarcGuillem_Servidor/src/Client/ControladorComunicacions.java</file>
-            <file>file:/Users/marcassens/Dropbox/1_UNIVERSITAT/3A/SC/Projecte%20SC/Tron_CopiaMarcGuillem_Servidor/src/Servidor/ServidorNIO.java</file>
+            <file>file:/Users/marcassens/Dropbox/1_UNIVERSITAT/3A/SC/Projecte%20SC/Tron_CopiaMarcGuillem_Servidor/src/Patrons/ModelTron.java</file>
             <file>file:/Users/marcassens/Dropbox/1_UNIVERSITAT/3A/SC/Projecte%20SC/Tron_CopiaMarcGuillem_Servidor/src/Client/Client.java</file>
         </group>
     </open-files>

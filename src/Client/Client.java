@@ -14,6 +14,23 @@ import java.net.UnknownHostException;
  * @author marcassens
  */
 public class Client {
+    
+    public Client() throws UnknownHostException, IOException{
+        ClientStream clientComunicacions = new ClientStream(Comms.portServidor);
+
+	Model_Client model = new Model_Client();
+	final Vista_Client gui = new Vista_Client(model);
+	
+        Controlador_Client controlador = new Controlador_Client(gui,model, clientComunicacions);
+	controlador.inici();
+        
+        ControladorComunicacions controladorComms = new ControladorComunicacions(model, clientComunicacions);
+        controladorComms.start();
+    }
+    
+    
+    
+    
     public static void main(String[] args) throws UnknownHostException, IOException{
         ClientStream clientComunicacions = new ClientStream(Comms.portServidor);
 

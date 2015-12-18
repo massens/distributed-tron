@@ -1,0 +1,10 @@
+Dimensions pantalla 971x700
+Dimensions foto en cm 34x24,5
+
+Botó play
+8,6 cm x 2,4 cm
+
+Botó exit
+3,1 cm x 1,4 cm
+
+Font: Helvetica Neue Regular

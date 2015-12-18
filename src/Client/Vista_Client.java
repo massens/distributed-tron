@@ -24,9 +24,6 @@ public class Vista_Client implements Observer{
 		//f.pack();
 		f.setVisible(true);
 
-
-		model.setWindowSize(Const.SCREENX, Const.SCREENY);
-
 	}
 
 	public void update(Observable ignorarObs, Object ignorarObj){ //Pull update
