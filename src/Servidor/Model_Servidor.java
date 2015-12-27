@@ -90,9 +90,8 @@ public class Model_Servidor extends Observable{
 	public void dibuixaLineas(){
             
                 System.out.println("Dibuixa Lineas amb direccions: "+ currentDirection[0] +" "+currentDirection[1]);
-		//JUGADOR 1
-                
-		 
+		
+                //JUGADOR 1
 		switch(currentDirection[0]){
 		case Const.UP:
 			if (centrey1>0){
@@ -155,31 +154,28 @@ public class Model_Servidor extends Observable{
 			}
 			break;
 		}
-                
-                System.out.println("Pathx1 : "+pathx1);
-                System.out.println("Pathy1 : "+pathy1);
 
-		//CONDICIÓ DE COL·LISIÓ
-		//CONDICIÓ DE COL·LISIÓ
-	    for (int x = 0; x<pathx1.size();x++){
-	    	if (((centrex1 == pathx1.get(x)) && (centrey1 == pathy1.get(x))) || ((centrex2 == pathx2.get(x)) && (centrey2 == pathy2.get(x))) || ((centrex1 == pathx2.get(x)) && (centrey1 == pathy2.get(x))) || ((centrex2 == pathx1.get(x)) && (centrey2 == pathy1.get(x)))){
-	    		
 
-	    		//CAMBIAR PER FER "GAME OVER"
-	    		System.exit(0);
-	    	}
-	    }
-
-	    //Afegeix les noves posicions
+                //Afegeix les noves posicions
 		pathx1.add(centrex1);
 		pathy1.add(centrey1);
 		pathx2.add(centrex2);
 		pathy2.add(centrey2);
 
-
-
 		//Avisa a la Vista_Client
 		avisarObservadors();
+                
+		//CONDICIÓ DE COL·LISIÓ
+	    for (int x = 0; x<pathx1.size()-1;x++){
+	    	if (((centrex1 == pathx1.get(x)) && (centrey1 == pathy1.get(x))) || 
+                        ((centrex2 == pathx2.get(x)) && (centrey2 == pathy2.get(x))) || 
+                        ((centrex1 == pathx2.get(x)) && (centrey1 == pathy2.get(x))) || 
+                        ((centrex2 == pathx1.get(x)) && (centrey2 == pathy1.get(x)))){
+                    
+                    //CAMBIAR PER FER "GAME OVER"
+                    System.exit(0);
+	    	}
+	    }
 
 	}
 

@@ -7,71 +7,51 @@ import java.nio.*;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.*;
 
-
 public class ClientStream { //implements Comunicacions {
 
     protected SocketChannel sc;
+    protected ByteBuffer bbReceptor;
+    protected ByteBuffer bbEnviador;
 
     public ClientStream(int port) throws UnknownHostException, IOException {
+        //bbReceptor te coordenades enteres xy de 2 jugadors,  i cada Integer
+        //té 4 bytes. 2x2x4=16 bytes. bbEnviador només envia la tecla premuda
+        //com a un enter = 4 bytes.
         sc = SocketChannel.open(new InetSocketAddress(2222));
         sc.configureBlocking(true);
-
+        bbReceptor = ByteBuffer.allocate(16);
+        bbEnviador = ByteBuffer.allocate(4);
     }
 
-    public void enviar(int provisional_Direction1) {
+    public synchronized void enviar(int provisional_Direction1) {
+        //Només hi ha un ByteBuffer Enviador per eficiéncia. Hi hauran tants
+        //threads que utilitzin aquest buffer com tecles premudes, per tant
+        //el buffer és un recurs compartit i la funció és synchronyzed
+        
+        bbEnviador.clear();
+        System.out.println("Envia direccio: " + provisional_Direction1);
+        bbEnviador.asIntBuffer().put(provisional_Direction1);
+        
         try {
-            //Posibilitat d'inicialitzar el buffer al comenament
-            //per a que no es creï un buffer cada cop, que es reutilitzi
-            //Un INT son 4 bytes!!!
-            System.out.println("Envia direccio: "+ provisional_Direction1);
-            ByteBuffer bb = ByteBuffer.allocate(4);
-            bb.asIntBuffer().put(provisional_Direction1);
-
-            sc.write(bb);
-            bb.clear();
-
+            sc.write(bbEnviador);
         } catch (Exception e) {
         }
     }
 
     public int[] rebre() {
-        System.out.println("Rebre!");
+        //Només hi ha un ByteBuffer Receptor, que ens construeix en el 
+        //constructor, per millorar la eficiéncia. Com que només hi ha un thread
+        //que utilitza aquest buffer, la funció no és synchronyzed.
 
-//        String missatge = new String();
-        int[] directions = new int[4];
-        ByteBuffer bb = ByteBuffer.allocate(16);
-
+        bbReceptor.clear();
         try {
-//            Charset charset = Charset.forName("UTF-8");
-//            CharsetEncoder codificador = charset.newEncoder();
-//            CharsetDecoder decodificador = charset.newDecoder();
-//
-//            bb = codificador.encode(CharBuffer.wrap("hola"));
-
-//            bb.clear();
-
-            //bb.clear();
-            sc.read(bb);
-            //Descodificar bb
-            bb.flip();
-//            
-//            StringBuffer sb = new StringBuffer();
-//            sb.append(decodificador.decode(bb));
-//            missatge = new String(sb);
-//            
-//            System.out.println("Missatge rebut" + missatge);
-
+            sc.read(bbReceptor);
         } catch (Exception e) {
-            
         }
-        
-        directions[0] = bb.getInt(0);
-        directions[1] = bb.getInt(4);
-        directions[2] = bb.getInt(8);
-        directions[3] = bb.getInt(12);
+        bbReceptor.flip();
 
-        System.out.println("reb " + directions[0] + directions[1]);
-
-        return directions;//retorna el missatge rebut
+        int[] directions = new int[4];
+        bbReceptor.asIntBuffer().get(directions);
+        return directions;
     }
 }

@@ -31,21 +31,22 @@ import java.util.logging.Logger;
  * @author GERRI
  */
 public class ServidorNIO extends Thread implements Observer {
+
     protected Model_Servidor model;
     protected Controlador_Servidor controlador;
     protected ServerSocketChannel ssc;
     protected ServerSocket ss;
     protected Selector selector;
-    
+
     protected ArrayList<SocketChannel> arraySocketChannels;
 
     public ServidorNIO(int port, Model_Servidor model, Controlador_Servidor controlador) throws IOException {
         this.model = model;
         model.addObserver(this);
         this.controlador = controlador;
-        
+
         arraySocketChannels = new ArrayList<SocketChannel>();
-        
+
         ssc = ServerSocketChannel.open();
         ssc.configureBlocking(false); //Configurem que NO bloquejant
         ss = ssc.socket();
@@ -57,9 +58,9 @@ public class ServidorNIO extends Thread implements Observer {
         try {
             System.out.println("OPEN!");
             selector = Selector.open();
-            ssc.register(selector, SelectionKey.OP_ACCEPT);// ssc.register(selector.SelectionKey.OP_ACCEPT);
+            ssc.register(selector, SelectionKey.OP_ACCEPT);
             while (true) {
-                int canalsPreparats = selector.select(); //Bloquejant
+                int canalsPreparats = selector.select();
                 if (canalsPreparats == 0) {
                     continue;
                 }
@@ -68,20 +69,14 @@ public class ServidorNIO extends Thread implements Observer {
                 while (iterador.hasNext()) {
                     SelectionKey clau = iterador.next();
                     if (clau.isAcceptable()) {
-						//
                         //Fer accept
                         ferAccept(clau);
-                        //					
                     } else if (clau.isReadable()) {
-						//
                         // Fer echo
-                        //  
-
                         rebre(clau);
                     }
                     iterador.remove();
                 }
-
             }
         } catch (IOException ex) {
         }
@@ -89,61 +84,45 @@ public class ServidorNIO extends Thread implements Observer {
     }
 
     public void ferAccept(SelectionKey clau) throws IOException {
-        //A la seguent Línea, el casting no se si está ben fet
-        System.out.println("ACCEPT!");
         SocketChannel s = ((ServerSocketChannel) clau.channel()).accept();
         s.configureBlocking(false);
         s.register(selector, SelectionKey.OP_READ);
-        
         arraySocketChannels.add(s);
-        if (arraySocketChannels.size() > 1) controlador.inici();
+
+        //Inicia el Joc quan es conecta el 2n Jugador
+        if (arraySocketChannels.size() > 1) {
+            controlador.inici();
+        }
 
     }
 
-    public void rebre(SelectionKey clau) throws IOException{
-        
+    public void rebre(SelectionKey clau) throws IOException {
         SocketChannel s = ((SocketChannel) clau.channel());
         int userId = arraySocketChannels.indexOf(s);
-        
+
         ByteBuffer espai = ByteBuffer.allocate(4);
         s.read(espai);
         espai.flip();
-        
-//        model.updateDireccio(espai.getInt(), userId);
         controlador.keyPressed(espai.getInt(), userId);
-        
-    }
 
+    }
 
     @Override
     public void update(Observable o, Object arg) {
-        //Fer broadcast a tothome!! Com el fer echo, però a tothom
-//        if ( typeof(arg) == Integer){};
-        
+
         int[] lastPosition = (int[]) arg;
-        System.out.println("Update: "+ lastPosition[0]+ " "+lastPosition[1] + " "+lastPosition[2] + " "+lastPosition[3]);
-        
+
         ByteBuffer bb = ByteBuffer.allocate(16);
         bb.asIntBuffer().put(lastPosition);
 
-        
-        ByteBuffer bb3 = ByteBuffer.allocate(16);
-        bb3.asIntBuffer().put(lastPosition);
-        System.out.println("SENDING: " + bb3.getInt() + " " + bb3.getInt() + " " + bb3.getInt() + " " + bb3.getInt());
-
-        try {
-
-
-            
-            if (arraySocketChannels.size() > 1){
+        if (arraySocketChannels.size() > 1) {
+            try {
                 arraySocketChannels.get(0).write(bb);
                 bb.position(0);
                 arraySocketChannels.get(1).write(bb);
+            } catch (IOException ex) {
+                Logger.getLogger(ServidorNIO.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (Exception ex) {
-            Logger.getLogger(ServidorNIO.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        
     }
 }
