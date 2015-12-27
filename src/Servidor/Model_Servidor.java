@@ -24,8 +24,7 @@ public class Model_Servidor extends Observable{
 	int centrey2;
 
 	//Direcció inicial
-	int currentDirection1;
-	int currentDirection2;
+	int currentDirection[];
 
 	//Mides de la finestra
 	int windowHeight;
@@ -49,8 +48,9 @@ public class Model_Servidor extends Observable{
 		centrey2 = 440;
 
 		//Direcció inicial
-		currentDirection1 = Const.RIGHT;
-		currentDirection2 = Const.LEFT;
+                currentDirection = new int[2];
+		currentDirection[0] = Const.RIGHT;
+		currentDirection[1] = Const.LEFT;
 
 
 		//Quant avançen a cada "refrescada"
@@ -72,14 +72,13 @@ public class Model_Servidor extends Observable{
 
 	//Setters
 
-	//public void updateDireccio(int provisional_Direction1, int provisional_Direction2){
-        public void updateDireccio(int provisional_Direction, int userId){
-		if ( provisional_Direction != Const.NOACTION){
-                    if ( userId == 0 ) currentDirection1 = provisional_Direction;
-                    if ( userId == 1 ) currentDirection2 = provisional_Direction;
-                }
-                avisarObservadors();
-                //dibuixaLineas();
+	public void updateDireccio(int provisional_Direction1, int provisional_Direction2){
+                updateDireccioJugador(provisional_Direction1, 0);
+                updateDireccioJugador(provisional_Direction2, 1);  
+                System.out.println("Direccions Jugadors:" + currentDirection[0]+currentDirection[1]);
+                dibuixaLineas();
+                
+//                avisarObservadors();
 	}
 
 	public void setWindowSize(int windowWidth, int windowHeight){
@@ -90,26 +89,27 @@ public class Model_Servidor extends Observable{
 	//Funcions especials per tractar dades
 	public void dibuixaLineas(){
             
-                System.out.println("Dibuixa Lineas amb direccions: "+ currentDirection1 +" "+currentDirection2);
+                System.out.println("Dibuixa Lineas amb direccions: "+ currentDirection[0] +" "+currentDirection[1]);
 		//JUGADOR 1
                 
-		switch(currentDirection1){
+		 
+		switch(currentDirection[0]){
 		case Const.UP:
 			if (centrey1>0){
 			centrey1-=Const.STEP;
 			} else {
-				centrey1 = windowHeight;
+				centrey1 = Const.SCREENX;
 			}
 			break;
 		case Const.RIGHT:
-			if (centrex1 < windowWidth){
+			if (centrex1 < Const.SCREENY){
 			centrex1+=Const.STEP;
 			} else {
 				centrex1 = 0;
 			}
 			break;
 		case Const.DOWN:
-			if (centrey1 < windowHeight){
+			if (centrey1 < Const.SCREENY){
 			centrey1+=Const.STEP;
 			} else {
 				centrey1 = 0;
@@ -119,29 +119,29 @@ public class Model_Servidor extends Observable{
 			if (centrex1>0){
 			centrex1-=Const.STEP;
 			} else {
-				centrex1 = windowWidth;
+				centrex1 = Const.SCREENX;
 			}
 			break;
 		}
 
 		//JUGADOR 2
-		switch(currentDirection2){
+		switch(currentDirection[1]){
 		case Const.UP:
 			if (centrey2>0){
 			centrey2-=Const.STEP;
 			} else {
-				centrey2 = windowHeight;
+				centrey2 = Const.SCREENY;
 			}
 			break;
 		case Const.RIGHT:
-			if (centrex2 < windowWidth){
+			if (centrex2 < Const.SCREENX){
 			centrex2+=Const.STEP;
 			} else {
 				centrex2 = 0;
 			}
 			break;
 		case Const.DOWN:
-			if (centrey2 < windowHeight){
+			if (centrey2 < Const.SCREENY){
 				centrey2+=Const.STEP;
 			} else {
 				centrey2 = 0;
@@ -151,12 +151,15 @@ public class Model_Servidor extends Observable{
 			if (centrex2>0){
 			centrex2-=Const.STEP;
 			} else {
-				centrex2 = windowWidth;
+				centrex2 = Const.SCREENX;
 			}
 			break;
 		}
+                
+                System.out.println("Pathx1 : "+pathx1);
+                System.out.println("Pathy1 : "+pathy1);
 
-
+		//CONDICIÓ DE COL·LISIÓ
 		//CONDICIÓ DE COL·LISIÓ
 	    for (int x = 0; x<pathx1.size();x++){
 	    	if (((centrex1 == pathx1.get(x)) && (centrey1 == pathy1.get(x))) || ((centrex2 == pathx2.get(x)) && (centrey2 == pathy2.get(x))) || ((centrex1 == pathx2.get(x)) && (centrey1 == pathy2.get(x))) || ((centrex2 == pathx1.get(x)) && (centrey2 == pathy1.get(x)))){
@@ -173,8 +176,7 @@ public class Model_Servidor extends Observable{
 		pathx2.add(centrex2);
 		pathy2.add(centrey2);
 
-                System.out.println("Pathx1 : "+pathx1);
-                System.out.println("Pathx1 : "+pathy1);
+
 
 		//Avisa a la Vista_Client
 		avisarObservadors();
@@ -190,11 +192,34 @@ public class Model_Servidor extends Observable{
 
 	protected void avisarObservadors(){
 		setChanged();
-                int[] dir = new int[2];
-                dir[0] = currentDirection1;
-                dir[1] = currentDirection2;
-		notifyObservers(dir);
+		notifyObservers(getLastPosition());
 	}
 
 
+        //updateDireccioJugador
+        //Actualitza la direccio només en els casos permesos
+        private void updateDireccioJugador(int direccioRebuda, int indexJugador){
+            if ( direccioRebuda == Const.NOACTION){
+                //No fem res
+            } else if (direccioRebuda == Const.UP && currentDirection[indexJugador] != Const.DOWN){
+                currentDirection[indexJugador] = direccioRebuda;
+            } else if (direccioRebuda == Const.DOWN && currentDirection[indexJugador] != Const.UP){
+                currentDirection[indexJugador] = direccioRebuda;
+            } else if (direccioRebuda == Const.RIGHT && currentDirection[indexJugador] != Const.LEFT){
+                currentDirection[indexJugador] = direccioRebuda;
+            } else if (direccioRebuda == Const.LEFT && currentDirection[indexJugador] != Const.RIGHT){
+                currentDirection[indexJugador] = direccioRebuda;
+            }
+        }
+        
+        private int[] getLastPosition(){
+            int[] lastPosition = new int[4];
+            lastPosition[0] = pathx1.get(pathx1.size()-1);
+            lastPosition[1] = pathy1.get(pathy1.size()-1);
+            lastPosition[2] = pathx2.get(pathx2.size()-1);
+            lastPosition[3] = pathy2.get(pathy2.size()-1);
+            return lastPosition;
+        }
+        
+        
 }

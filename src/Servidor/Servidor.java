@@ -15,7 +15,7 @@ import Utils.Comms;
 public class Servidor {
      public static void main(String[] args)throws IOException{
         Model_Servidor model = new Model_Servidor();
-
-        new ServidorNIO(Comms.portServidor, model).start();
+        Controlador_Servidor controlador = new Controlador_Servidor(model);
+        new ServidorNIO(Comms.portServidor, model, controlador).start();
     }
 }

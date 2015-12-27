@@ -32,15 +32,17 @@ import java.util.logging.Logger;
  */
 public class ServidorNIO extends Thread implements Observer {
     protected Model_Servidor model;
+    protected Controlador_Servidor controlador;
     protected ServerSocketChannel ssc;
     protected ServerSocket ss;
     protected Selector selector;
     
     protected ArrayList<SocketChannel> arraySocketChannels;
 
-    public ServidorNIO(int port, Model_Servidor model) throws IOException {
+    public ServidorNIO(int port, Model_Servidor model, Controlador_Servidor controlador) throws IOException {
         this.model = model;
         model.addObserver(this);
+        this.controlador = controlador;
         
         arraySocketChannels = new ArrayList<SocketChannel>();
         
@@ -94,6 +96,8 @@ public class ServidorNIO extends Thread implements Observer {
         s.register(selector, SelectionKey.OP_READ);
         
         arraySocketChannels.add(s);
+        if (arraySocketChannels.size() > 1) controlador.inici();
+
     }
 
     public void rebre(SelectionKey clau) throws IOException{
@@ -105,7 +109,8 @@ public class ServidorNIO extends Thread implements Observer {
         s.read(espai);
         espai.flip();
         
-        model.updateDireccio(espai.getInt(), userId);
+//        model.updateDireccio(espai.getInt(), userId);
+        controlador.keyPressed(espai.getInt(), userId);
         
     }
 
@@ -115,16 +120,16 @@ public class ServidorNIO extends Thread implements Observer {
         //Fer broadcast a tothome!! Com el fer echo, però a tothom
 //        if ( typeof(arg) == Integer){};
         
-        int[] dir = (int[]) arg;
-        System.out.println("Update: "+ dir[0]+dir[1]);
+        int[] lastPosition = (int[]) arg;
+        System.out.println("Update: "+ lastPosition[0]+ " "+lastPosition[1] + " "+lastPosition[2] + " "+lastPosition[3]);
         
-        ByteBuffer bb = ByteBuffer.allocate(8);
-        bb.asIntBuffer().put(dir);
+        ByteBuffer bb = ByteBuffer.allocate(16);
+        bb.asIntBuffer().put(lastPosition);
 
         
-        ByteBuffer bb3 = ByteBuffer.allocate(8);
-        bb3.asIntBuffer().put(dir);
-        System.out.println("SENDING: " + bb3.getInt() + bb3.getInt());
+        ByteBuffer bb3 = ByteBuffer.allocate(16);
+        bb3.asIntBuffer().put(lastPosition);
+        System.out.println("SENDING: " + bb3.getInt() + " " + bb3.getInt() + " " + bb3.getInt() + " " + bb3.getInt());
 
         try {
 

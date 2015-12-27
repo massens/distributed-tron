@@ -16,7 +16,7 @@ public class ControladorComunicacions extends Thread {
            
              int[] directions= comms.rebre(); // rebre missatge servidor i accions corresponents
             
-             model.updateDireccio(directions[0], directions[1]);
+             model.dibuixaLineas(directions);
     
         }
     }

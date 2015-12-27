@@ -14,7 +14,7 @@ public class Controlador_Client implements KeyListener{
 
 	protected int provisional_Direction1;
 
-	protected Timer t;
+//	protected Timer t;
 
 
 
@@ -31,64 +31,51 @@ public class Controlador_Client implements KeyListener{
 		provisional_Direction1 = Const.NOACTION;
 
 		//Funcio Update
-		t = new Timer();
+//		t = new Timer();
 
 	}
 
 	public void inici(){
-		t.scheduleAtFixedRate(new UpdateTasca(), 0, Const.TASKPERIOD);
+//		t.scheduleAtFixedRate(new UpdateTasca(), 0, Const.TASKPERIOD);
 	}
 
 	public void keyPressed(KeyEvent e) {
+            
 		if (e.getKeyCode() == KeyEvent.VK_UP) {
-			if (provisional_Direction1 != Const.DOWN){
+//			if (provisional_Direction1 != Const.DOWN){
 			provisional_Direction1 = Const.UP;
-			}
-		} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-			if (provisional_Direction1 != Const.UP){
-				provisional_Direction1 = Const.DOWN;
-				}
-		} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-			if (provisional_Direction1 != Const.LEFT){
-				provisional_Direction1 = Const.RIGHT;
-				}
-		} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-			if (provisional_Direction1 != Const.RIGHT){
-				provisional_Direction1 = Const.LEFT;
-				}
-		}
-//		if (e.getKeyCode() == KeyEvent.VK_W){
-//			if (provisional_Direction2 != Const.DOWN){
-//			provisional_Direction2 = Const.UP;
 //			}
-//		} else if (e.getKeyCode() == KeyEvent.VK_S) {
-//			if (provisional_Direction2 != Const.UP){
-//				provisional_Direction2 = Const.DOWN;
+		} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+//			if (provisional_Direction1 != Const.UP){
+				provisional_Direction1 = Const.DOWN;
 //				}
-//		} else if (e.getKeyCode() == KeyEvent.VK_D) {
-//			if (provisional_Direction2 != Const.LEFT){
-//				provisional_Direction2 = Const.RIGHT;
+		} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+//			if (provisional_Direction1 != Const.LEFT){
+				provisional_Direction1 = Const.RIGHT;
 //				}
-//		} else if (e.getKeyCode() == KeyEvent.VK_A) {
-//			if (provisional_Direction2 != Const.RIGHT){
-//				provisional_Direction2 = Const.LEFT;
+		} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+//			if (provisional_Direction1 != Const.RIGHT){
+				provisional_Direction1 = Const.LEFT;
 //				}
-//		}
+		}
+                comunicacions.enviar(provisional_Direction1);
+//                provisional_Direction1 = Const.NOACTION;
+
 	}
 
 	public void keyReleased(KeyEvent e) {}
 
-	class UpdateTasca extends TimerTask{
-		public void run(){
-
-			//Aquest Update ha de ser el que es
-			comunicacions.enviar(provisional_Direction1);
-			// model.updateDireccio(provisional_Direction1, provisional_Direction2);
-
-
-			provisional_Direction1 = Const.NOACTION;
-		}
-	}
+//	class UpdateTasca extends TimerTask{
+//		public void run(){
+//
+//			//Aquest Update ha de ser el que es
+//			comunicacions.enviar(provisional_Direction1);
+//			// model.updateDireccio(provisional_Direction1, provisional_Direction2);
+//
+//
+//			provisional_Direction1 = Const.NOACTION;
+//		}
+//	}
 
 	public void keyTyped(KeyEvent arg0) {}
 

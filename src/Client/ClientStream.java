@@ -23,6 +23,7 @@ public class ClientStream { //implements Comunicacions {
             //Posibilitat d'inicialitzar el buffer al comenament
             //per a que no es creï un buffer cada cop, que es reutilitzi
             //Un INT son 4 bytes!!!
+            System.out.println("Envia direccio: "+ provisional_Direction1);
             ByteBuffer bb = ByteBuffer.allocate(4);
             bb.asIntBuffer().put(provisional_Direction1);
 
@@ -37,8 +38,8 @@ public class ClientStream { //implements Comunicacions {
         System.out.println("Rebre!");
 
 //        String missatge = new String();
-        int[] directions = new int[2];
-        ByteBuffer bb = ByteBuffer.allocate(8);
+        int[] directions = new int[4];
+        ByteBuffer bb = ByteBuffer.allocate(16);
 
         try {
 //            Charset charset = Charset.forName("UTF-8");
@@ -66,6 +67,9 @@ public class ClientStream { //implements Comunicacions {
         
         directions[0] = bb.getInt(0);
         directions[1] = bb.getInt(4);
+        directions[2] = bb.getInt(8);
+        directions[3] = bb.getInt(12);
+
         System.out.println("reb " + directions[0] + directions[1]);
 
         return directions;//retorna el missatge rebut

@@ -15,8 +15,8 @@ public class Model_Client extends Observable{
 	int centrey2;
 
 	//Direcció inicial
-	int currentDirection1;
-	int currentDirection2;
+	private int currentDirection1;
+	private int currentDirection2;
 
 	//Quant avançen a cada "refrescada"
 	ArrayList<Integer> pathx1;
@@ -59,79 +59,22 @@ public class Model_Client extends Observable{
 	//Setters
 
 	public void updateDireccio(int provisional_Direction1, int provisional_Direction2){
-		if ( provisional_Direction1 != Const.NOACTION) currentDirection1 = provisional_Direction1;
-		if ( provisional_Direction2 != Const.NOACTION) currentDirection2 = provisional_Direction2;
-		dibuixaLineas();
+//		if ( provisional_Direction1 != Const.NOACTION) currentDirection1 = provisional_Direction1;
+//		if ( provisional_Direction2 != Const.NOACTION) currentDirection2 = provisional_Direction2;
+//		dibuixaLineas();
 	}
 
 	//Funcions especials per tractar dades
-	public void dibuixaLineas(){
+	public void dibuixaLineas(int[] posicions){
+		
+                centrex1 = posicions[0];
+		centrey1 = posicions[1];
+		centrex2 = posicions[2];
+		centrey2 = posicions[3];
+                
                 System.out.println("Dibuixa Lineas amb direccions: "+ currentDirection1 +" "+currentDirection2);
 		//JUGADOR 1
-                
-		switch(currentDirection1){
-		case Const.UP:
-			if (centrey1>0){
-			centrey1-=Const.STEP;
-			} else {
-				centrey1 = Const.SCREENX;
-			}
-			break;
-		case Const.RIGHT:
-			if (centrex1 < Const.SCREENY){
-			centrex1+=Const.STEP;
-			} else {
-				centrex1 = 0;
-			}
-			break;
-		case Const.DOWN:
-			if (centrey1 < Const.SCREENY){
-			centrey1+=Const.STEP;
-			} else {
-				centrey1 = 0;
-			}
-			break;
-		case Const.LEFT:
-			if (centrex1>0){
-			centrex1-=Const.STEP;
-			} else {
-				centrex1 = Const.SCREENX;
-			}
-			break;
-		}
-
-		//JUGADOR 2
-		switch(currentDirection2){
-		case Const.UP:
-			if (centrey2>0){
-			centrey2-=Const.STEP;
-			} else {
-				centrey2 = Const.SCREENY;
-			}
-			break;
-		case Const.RIGHT:
-			if (centrex2 < Const.SCREENX){
-			centrex2+=Const.STEP;
-			} else {
-				centrex2 = 0;
-			}
-			break;
-		case Const.DOWN:
-			if (centrey2 < Const.SCREENY){
-				centrey2+=Const.STEP;
-			} else {
-				centrey2 = 0;
-			}
-			break;
-		case Const.LEFT:
-			if (centrex2>0){
-			centrex2-=Const.STEP;
-			} else {
-				centrex2 = Const.SCREENX;
-			}
-			break;
-		}
-
+    
 
 		//CONDICIÓ DE COL·LISIÓ
 	    for (int x = 0; x<pathx1.size();x++){
@@ -168,4 +111,14 @@ public class Model_Client extends Observable{
 		setChanged();
 		notifyObservers();
 	}
+
+    public int getCurrentDirection1() {
+        return currentDirection1;
+    }
+
+    public int getCurrentDirection2() {
+        return currentDirection2;
+    }
+        
+        
 }
