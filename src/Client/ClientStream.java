@@ -20,16 +20,12 @@ public class ClientStream { //implements Comunicacions {
 
     public void enviar(int provisional_Direction1) {
         try {
+            //Posibilitat d'inicialitzar el buffer al comenament
+            //per a que no es creï un buffer cada cop, que es reutilitzi
+            //Un INT son 4 bytes!!!
+            ByteBuffer bb = ByteBuffer.allocate(4);
+            bb.asIntBuffer().put(provisional_Direction1);
 
-      //Formatejem les dos int a un string. 
-            String s = String.format("%d", provisional_Direction1);
-
-            System.out.println("envia " + s);
-
-            Charset charset = Charset.forName("UTF-8");
-            CharsetEncoder codificador = charset.newEncoder();
-            ByteBuffer bb;
-            bb = codificador.encode(CharBuffer.wrap(s));
             sc.write(bb);
             bb.clear();
 
@@ -40,32 +36,36 @@ public class ClientStream { //implements Comunicacions {
     public int[] rebre() {
         System.out.println("Rebre!");
 
-        String missatge = new String();
+//        String missatge = new String();
         int[] directions = new int[2];
+        ByteBuffer bb = ByteBuffer.allocate(8);
+
         try {
-            ByteBuffer bb = null;
-            Charset charset = Charset.forName("UTF-8");
-            CharsetEncoder codificador = charset.newEncoder();
-            CharsetDecoder decodificador = charset.newDecoder();
+//            Charset charset = Charset.forName("UTF-8");
+//            CharsetEncoder codificador = charset.newEncoder();
+//            CharsetDecoder decodificador = charset.newDecoder();
+//
+//            bb = codificador.encode(CharBuffer.wrap("hola"));
 
-            bb = codificador.encode(CharBuffer.wrap("hola"));
-
-            bb.clear();
+//            bb.clear();
 
             //bb.clear();
             sc.read(bb);
             //Descodificar bb
             bb.flip();
-            StringBuffer sb = new StringBuffer();
-            sb.append(decodificador.decode(bb));
-            missatge = new String(sb);
-            System.out.println("Missatge rebut" + missatge);
+//            
+//            StringBuffer sb = new StringBuffer();
+//            sb.append(decodificador.decode(bb));
+//            missatge = new String(sb);
+//            
+//            System.out.println("Missatge rebut" + missatge);
 
         } catch (Exception e) {
             
         }
-        directions[0] = Character.getNumericValue(missatge.charAt(0));
-        directions[1] = Character.getNumericValue(missatge.charAt(1));
+        
+        directions[0] = bb.getInt(0);
+        directions[1] = bb.getInt(4);
         System.out.println("reb " + directions[0] + directions[1]);
 
         return directions;//retorna el missatge rebut

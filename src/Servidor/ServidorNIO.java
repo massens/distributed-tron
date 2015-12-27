@@ -97,23 +97,15 @@ public class ServidorNIO extends Thread implements Observer {
     }
 
     public void rebre(SelectionKey clau) throws IOException{
+        
         SocketChannel s = ((SocketChannel) clau.channel());
-        ByteBuffer espai = ByteBuffer.allocate(1024);
-        s.read(espai);
-        
-        
         int userId = arraySocketChannels.indexOf(s);
         
-        Charset charset = Charset.forName("UTF-8");
-        CharsetDecoder decodificador = charset.newDecoder();     
+        ByteBuffer espai = ByteBuffer.allocate(4);
+        s.read(espai);
         espai.flip();
         
-        StringBuffer sb = new StringBuffer();
-        sb.append(decodificador.decode(espai));    
-        String entrada = new String(sb);
-        
-        System.out.println("Entrada: " + entrada + "User: "+userId);
-        model.updateDireccio(Character.getNumericValue(entrada.charAt(0)), userId);
+        model.updateDireccio(espai.getInt(), userId);
         
     }
 
@@ -121,23 +113,27 @@ public class ServidorNIO extends Thread implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         //Fer broadcast a tothome!! Com el fer echo, però a tothom
+//        if ( typeof(arg) == Integer){};
+        
         int[] dir = (int[]) arg;
         System.out.println("Update: "+ dir[0]+dir[1]);
-            
-        String s = String.format("%d%d", dir[0], dir[1]);
         
+        ByteBuffer bb = ByteBuffer.allocate(8);
+        bb.asIntBuffer().put(dir);
+
+        
+        ByteBuffer bb3 = ByteBuffer.allocate(8);
+        bb3.asIntBuffer().put(dir);
+        System.out.println("SENDING: " + bb3.getInt() + bb3.getInt());
+
         try {
 
-            System.out.println("Broadcast" + s);
 
-            Charset charset = Charset.forName("UTF-8");
-            CharsetEncoder codificador = charset.newEncoder();
-            ByteBuffer bb0 = codificador.encode(CharBuffer.wrap(s));
-            ByteBuffer bb1 = codificador.encode(CharBuffer.wrap(s));
             
             if (arraySocketChannels.size() > 1){
-                arraySocketChannels.get(0).write(bb0);
-                arraySocketChannels.get(1).write(bb1);
+                arraySocketChannels.get(0).write(bb);
+                bb.position(0);
+                arraySocketChannels.get(1).write(bb);
             }
         } catch (Exception ex) {
             Logger.getLogger(ServidorNIO.class.getName()).log(Level.SEVERE, null, ex);

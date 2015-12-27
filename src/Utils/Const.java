@@ -13,6 +13,8 @@ public interface Const {
 
 
     public static final int STEP = 1;
+    public static final int TASKPERIOD = 200;
+
 
   
 }

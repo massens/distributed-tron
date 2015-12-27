@@ -36,7 +36,7 @@ public class Controlador_Client implements KeyListener{
 	}
 
 	public void inici(){
-		t.scheduleAtFixedRate(new UpdateTasca(), 0, 20);
+		t.scheduleAtFixedRate(new UpdateTasca(), 0, Const.TASKPERIOD);
 	}
 
 	public void keyPressed(KeyEvent e) {
