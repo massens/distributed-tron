@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 import Utils.Comms;
+import Utils.Const;
 import java.net.ServerSocket;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
@@ -110,18 +111,39 @@ public class ServidorNIO extends Thread implements Observer {
     @Override
     public void update(Observable o, Object arg) {
 
-        int[] lastPosition = (int[]) arg;
+        //Si el que volem és actualitzar les posicions al joc
+        if (arg instanceof int[]) {
+            int[] lastPosition = (int[]) arg;
 
-        ByteBuffer bb = ByteBuffer.allocate(16);
-        bb.asIntBuffer().put(lastPosition);
+            ByteBuffer bb = ByteBuffer.allocate(16);
+            bb.asIntBuffer().put(lastPosition);
 
-        if (arraySocketChannels.size() > 1) {
-            try {
-                arraySocketChannels.get(0).write(bb);
-                bb.position(0);
-                arraySocketChannels.get(1).write(bb);
-            } catch (IOException ex) {
-                Logger.getLogger(ServidorNIO.class.getName()).log(Level.SEVERE, null, ex);
+            if (arraySocketChannels.size() > 1) {
+                try {
+                    arraySocketChannels.get(0).write(bb);
+                    bb.position(0);
+                    arraySocketChannels.get(1).write(bb);
+                } catch (IOException ex) {
+                    Logger.getLogger(ServidorNIO.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }         
+        //Si el que volem és acabar la partida
+        else if (arg instanceof Integer) {
+            if ((int) arg == Const.ACABA_PARTIDA) {
+                System.out.println("AVCABA PARTIDA!" + arraySocketChannels.size());
+                controlador.acaba();
+
+                for (SocketChannel s : arraySocketChannels) {
+                    try {
+                        System.out.println("REMOVE SOCKET!");
+                        s.close();
+
+                    } catch (IOException ex) {
+                        Logger.getLogger(ServidorNIO.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                arraySocketChannels.clear();
             }
         }
     }

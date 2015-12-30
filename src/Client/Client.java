@@ -22,7 +22,6 @@ public class Client {
 	final Vista_Client gui = new Vista_Client(model);
 	
         Controlador_Client controlador = new Controlador_Client(gui,model, clientComunicacions);
-	controlador.inici();
         
         ControladorComunicacions controladorComms = new ControladorComunicacions(model, clientComunicacions);
         controladorComms.start();
@@ -38,7 +37,6 @@ public class Client {
 	final Vista_Client gui = new Vista_Client(model);
 	
         Controlador_Client controlador = new Controlador_Client(gui,model, clientComunicacions);
-	controlador.inici();
         
         ControladorComunicacions controladorComms = new ControladorComunicacions(model, clientComunicacions);
         controladorComms.start();

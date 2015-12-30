@@ -21,8 +21,7 @@ public class Controlador_Servidor {
     public Controlador_Servidor(Model_Servidor model) {
         this.model = model;
 
-        //Funcio Update
-        t = new Timer();
+
         provisional_Direction = new int[2];
         provisional_Direction[0] = Const.NOACTION;
         provisional_Direction[1] = Const.NOACTION;
@@ -30,7 +29,13 @@ public class Controlador_Servidor {
     }
 
     public void inici() {
+        //Funcio Update
+        t = new Timer();
         t.scheduleAtFixedRate(new UpdateTasca(), 0, Const.TASKPERIOD);
+    }
+    
+    public void acaba() {
+        t.cancel();
     }
 
     public void keyPressed(int direccioRebuda, int indexJugador) {

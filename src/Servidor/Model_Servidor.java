@@ -163,7 +163,7 @@ public class Model_Servidor extends Observable{
 		pathy2.add(centrey2);
 
 		//Avisa a la Vista_Client
-		avisarObservadors();
+		avisarObservadors(Const.UPDATE_POSITION);
                 
 		//CONDICIÓ DE COL·LISIÓ
 	    for (int x = 0; x<pathx1.size()-1;x++){
@@ -173,7 +173,9 @@ public class Model_Servidor extends Observable{
                         ((centrex2 == pathx1.get(x)) && (centrey2 == pathy1.get(x)))){
                     
                     //CAMBIAR PER FER "GAME OVER"
-                    System.exit(0);
+                    acabaPartida();
+//                   System.exit(0);
+                   
 	    	}
 	    }
 
@@ -186,9 +188,12 @@ public class Model_Servidor extends Observable{
 		addObserver(obsr);
 	}
 
-	protected void avisarObservadors(){
+	protected void avisarObservadors(int accio){
 		setChanged();
-		notifyObservers(getLastPosition());
+                
+                if (accio == Const.UPDATE_POSITION) notifyObservers(getLastPosition());
+                if (accio == Const.ACABA_PARTIDA) notifyObservers(Const.ACABA_PARTIDA);
+
 	}
 
 
@@ -215,6 +220,28 @@ public class Model_Servidor extends Observable{
             lastPosition[2] = pathx2.get(pathx2.size()-1);
             lastPosition[3] = pathy2.get(pathy2.size()-1);
             return lastPosition;
+        }
+        
+        private void acabaPartida(){
+                centrex1 = 40;
+		centrey1 = 40;
+		centrex2 = 600;
+		centrey2 = 440;
+
+		//Direcció inicial
+                currentDirection = new int[2];
+		currentDirection[0] = Const.RIGHT;
+		currentDirection[1] = Const.LEFT;
+
+
+		//Quant avançen a cada "refrescada"
+		pathx1 = new ArrayList<Integer>();
+		pathy1 = new ArrayList<Integer>();
+		pathx2 = new ArrayList<Integer>();
+		pathy2 = new ArrayList<Integer>();
+                
+                avisarObservadors(Const.ACABA_PARTIDA);
+
         }
         
         

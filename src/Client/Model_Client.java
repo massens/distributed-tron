@@ -1,7 +1,5 @@
 package Client;
 
-import Patrons.ModelTron;
-import Utils.*;
 
 import java.util.ArrayList;
 
@@ -29,6 +27,7 @@ public class Model_Client extends Observable {
         pathy1 = new ArrayList<Integer>();
         pathx2 = new ArrayList<Integer>();
         pathy2 = new ArrayList<Integer>();
+        
 
     }
 
@@ -50,14 +49,15 @@ public class Model_Client extends Observable {
         avisarObservadors();
 
         //CONDICIÓ DE COL·LISIÓ
+       
         for (int x = 0; x < pathx1.size() - 1; x++) {
             if (((centrex1 == pathx1.get(x)) && (centrey1 == pathy1.get(x)))
                     || ((centrex2 == pathx2.get(x)) && (centrey2 == pathy2.get(x)))
                     || ((centrex1 == pathx2.get(x)) && (centrey1 == pathy2.get(x)))
                     || ((centrex2 == pathx1.get(x)) && (centrey2 == pathy1.get(x)))) {
 
-                //CAMBIAR PER FER "GAME OVER"
-                System.exit(0);
+                //Acaba la frame del joc
+                 v.closeFrame();
             }
         }
 

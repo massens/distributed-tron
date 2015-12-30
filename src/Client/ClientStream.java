@@ -51,7 +51,11 @@ public class ClientStream { //implements Comunicacions {
         bbReceptor.flip();
 
         int[] directions = new int[4];
-        bbReceptor.asIntBuffer().get(directions);
+        bbReceptor.asIntBuffer().get(directions, 0, 4);
+        
+//        if (directions[0] == -1) System.out.println("EM CRIDEN CLOSE");
+        
+//        bbReceptor.asIntBuffer().get(directions, 1, 3);
         return directions;
     }
 }

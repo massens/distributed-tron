@@ -187,6 +187,9 @@ public class PantallaPrincipal {
             try {
                 //Inicia Joc
                 new Client();
+//                new Client();
+                //amaga el menu
+                principal.setVisible(false);
             } catch (IOException ex) {
                 Logger.getLogger(PantallaPrincipal.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -216,6 +219,7 @@ public class PantallaPrincipal {
             super.paint(g);
         }
     }
+    
 
     public static void main(String[] args) {
         PantallaPrincipal menu = new PantallaPrincipal();
