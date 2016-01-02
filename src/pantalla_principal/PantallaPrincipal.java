@@ -1,6 +1,8 @@
 package pantalla_principal;
 
 import Client.Client;
+import Client.ClientStream;
+import Utils.Const;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -125,15 +127,9 @@ public class PantallaPrincipal {
         grup.add(option1);
         grup.add(option2);
         grup.add(option3);
-
-        if (option1.isSelected()) {
-            // s'ha seleccionat x cosa
-
-        } else if (option2.isSelected()) {
-
-        } else {
-
-        }
+        
+        //Aixo s'ha de canviar, ara mateix no funciona be
+        
         // Label seleccio checkbox
         labelCheck = new JLabel("Select your player style!", Label.LEFT);
         labelCheck.setBounds(390, 290, 245, 220);
@@ -186,7 +182,22 @@ public class PantallaPrincipal {
         public void actionPerformed(ActionEvent ae) {
             try {
                 //Inicia Joc
-                new Client();
+                Client c = new Client();
+                ClientStream cc = c.getClientStream();
+                //Obté el tipus de jugador seleccionat
+                int tipus_jugador;
+
+                if (option1.isSelected()) {
+                    // s'ha seleccionat x cosa
+                    tipus_jugador = Const.BOMBER;
+                } else if (option3.isSelected()) {
+                    tipus_jugador = Const.JUMPER;
+                } else {
+                    tipus_jugador = Const.NORMAL;
+                }
+                //Enviem el tipus selecconat al servidor
+                cc.enviar(tipus_jugador);
+                
 //                new Client();
                 //amaga el menu
                 principal.setVisible(false);

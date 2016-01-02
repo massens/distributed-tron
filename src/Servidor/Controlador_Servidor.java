@@ -15,20 +15,23 @@ import java.util.*;
 public class Controlador_Servidor {
 
     protected Model_Servidor model;
-    protected int[] provisional_Direction;
+    protected int[] provisional_Key;
     protected Timer t;
 
     public Controlador_Servidor(Model_Servidor model) {
         this.model = model;
 
 
-        provisional_Direction = new int[2];
-        provisional_Direction[0] = Const.NOACTION;
-        provisional_Direction[1] = Const.NOACTION;
+        provisional_Key = new int[2];
+        provisional_Key[0] = Const.NOACTION;
+        provisional_Key[1] = Const.NOACTION;
 
     }
 
     public void inici() {
+        //Rebem els tipus de jugadors
+        
+        
         //Funcio Update
         t = new Timer();
         t.scheduleAtFixedRate(new UpdateTasca(), 0, Const.TASKPERIOD);
@@ -39,27 +42,17 @@ public class Controlador_Servidor {
     }
 
     public void keyPressed(int direccioRebuda, int indexJugador) {
-
-        if (direccioRebuda == Const.UP) {
-            provisional_Direction[indexJugador] = Const.UP;
-        } else if (direccioRebuda == Const.DOWN) {
-            provisional_Direction[indexJugador] = Const.DOWN;
-        } else if (direccioRebuda == Const.RIGHT) {
-            provisional_Direction[indexJugador] = Const.RIGHT;
-        } else if (direccioRebuda == Const.LEFT) {
-            provisional_Direction[indexJugador] = Const.LEFT;
-        }
-
+        provisional_Key[indexJugador] = direccioRebuda;
     }
 
     class UpdateTasca extends TimerTask {
 
         public void run() {
 
-            model.updateDireccio(provisional_Direction[0], provisional_Direction[1]);
+            model.update(provisional_Key[0], provisional_Key[1]);
 
-            provisional_Direction[0] = Const.NOACTION;
-            provisional_Direction[1] = Const.NOACTION;
+            provisional_Key[0] = Const.NOACTION;
+            provisional_Key[1] = Const.NOACTION;
 
         }
     }

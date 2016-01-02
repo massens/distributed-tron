@@ -6,6 +6,8 @@ import java.net.*;
 import java.nio.*;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ClientStream { //implements Comunicacions {
 
@@ -47,15 +49,21 @@ public class ClientStream { //implements Comunicacions {
         try {
             sc.read(bbReceptor);
         } catch (Exception e) {
+            e.printStackTrace();
         }
         bbReceptor.flip();
 
         int[] directions = new int[4];
-        bbReceptor.asIntBuffer().get(directions, 0, 4);
-        
-//        if (directions[0] == -1) System.out.println("EM CRIDEN CLOSE");
-        
-//        bbReceptor.asIntBuffer().get(directions, 1, 3);
+        try{
+        bbReceptor.asIntBuffer().get(directions);
+        }catch(BufferUnderflowException ex){
+            //Aixó passa quan es desconecta el Servidor
+            try {
+                sc.close();
+            } catch (IOException ex1) {}
+            
+            return null;
+        }
         return directions;
     }
 }

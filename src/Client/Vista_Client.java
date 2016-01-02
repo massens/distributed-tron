@@ -65,9 +65,13 @@ public class Vista_Client implements Observer {
             for (int x = 0; x < model.getPathX1().size(); x++) {
                 g.setColor(Color.green);
                 g.fillRect(model.getPathX1().get(x), model.getPathY1().get(x), Const.PATHSIZE, Const.PATHSIZE);
+            }
+            
+            for (int x = 0; x < model.getPathX2().size(); x++) {
                 g.setColor(Color.red);
                 g.fillRect(model.getPathX2().get(x), model.getPathY2().get(x), Const.PATHSIZE, Const.PATHSIZE);
             }
+            
         }
 
     }

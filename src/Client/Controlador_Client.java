@@ -26,15 +26,17 @@ public class Controlador_Client implements KeyListener{
 
 	public void keyPressed(KeyEvent e) {
             
-		if (e.getKeyCode() == KeyEvent.VK_UP) {
+		if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_W) {
 			provisional_Direction1 = Const.UP;
-		} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+		} else if (e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_S) {
 				provisional_Direction1 = Const.DOWN;
-		} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+		} else if (e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_D) {
 				provisional_Direction1 = Const.RIGHT;
-		} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+		} else if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_A) {
 				provisional_Direction1 = Const.LEFT;
-		}
+		} else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+                                provisional_Direction1 = Const.SPACEBAR;
+                }
                 comunicacions.enviar(provisional_Direction1);
 
 	}

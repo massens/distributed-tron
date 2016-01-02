@@ -14,9 +14,12 @@ public class ControladorComunicacions extends Thread {
     public void run() {
         while(true){
            
-             int[] directions= comms.rebre(); // rebre missatge servidor i accions corresponents
-            
-             model.dibuixaLineas(directions);
+             int[] posicions= comms.rebre(); // rebre missatge servidor i accions corresponents
+             if (posicions == null || model.dibuixaLineas(posicions) == 0){
+                 System.out.println("ACABA THREAD rebre");
+                 return;
+             }
+             
     
         }
     }

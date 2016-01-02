@@ -15,8 +15,10 @@ import java.net.UnknownHostException;
  */
 public class Client {
     
+    protected ClientStream clientComunicacions;
+    
     public Client() throws UnknownHostException, IOException{
-        ClientStream clientComunicacions = new ClientStream(Comms.portServidor);
+        clientComunicacions = new ClientStream(Comms.portServidor);
 
 	Model_Client model = new Model_Client();
 	final Vista_Client gui = new Vista_Client(model);
@@ -42,4 +44,11 @@ public class Client {
         controladorComms.start();
     }
 
+    public ClientStream getClientStream() {
+        
+        return clientComunicacions;
+        
+    }
+    
+    
 }

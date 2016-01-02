@@ -92,6 +92,7 @@ public class ServidorNIO extends Thread implements Observer {
 
         //Inicia el Joc quan es conecta el 2n Jugador
         if (arraySocketChannels.size() > 1) {
+            
             controlador.inici();
         }
 
@@ -114,10 +115,9 @@ public class ServidorNIO extends Thread implements Observer {
         //Si el que volem és actualitzar les posicions al joc
         if (arg instanceof int[]) {
             int[] lastPosition = (int[]) arg;
-
-            ByteBuffer bb = ByteBuffer.allocate(16);
+            ByteBuffer bb = ByteBuffer.allocate(lastPosition.length*4);
             bb.asIntBuffer().put(lastPosition);
-
+            //System.out.printf("J1: %d %d;   J2: %d %d\n", lastPosition[0],lastPosition[1],lastPosition[2],lastPosition[3]);
             if (arraySocketChannels.size() > 1) {
                 try {
                     arraySocketChannels.get(0).write(bb);
@@ -127,18 +127,18 @@ public class ServidorNIO extends Thread implements Observer {
                     Logger.getLogger(ServidorNIO.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        }         
+        }   
+        
+        
+        
+        
         //Si el que volem és acabar la partida
         else if (arg instanceof Integer) {
             if ((int) arg == Const.ACABA_PARTIDA) {
-                System.out.println("AVCABA PARTIDA!" + arraySocketChannels.size());
                 controlador.acaba();
-
                 for (SocketChannel s : arraySocketChannels) {
                     try {
-                        System.out.println("REMOVE SOCKET!");
                         s.close();
-
                     } catch (IOException ex) {
                         Logger.getLogger(ServidorNIO.class.getName()).log(Level.SEVERE, null, ex);
                     }
