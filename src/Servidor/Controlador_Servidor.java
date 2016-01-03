@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -18,10 +19,11 @@ public class Controlador_Servidor {
     protected int[] provisional_Direction;
     protected Timer t;
 
+
     public Controlador_Servidor(Model_Servidor model) {
         this.model = model;
 
-
+        
         provisional_Direction = new int[2];
         provisional_Direction[0] = Const.NOACTION;
         provisional_Direction[1] = Const.NOACTION;

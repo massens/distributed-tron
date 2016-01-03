@@ -1,5 +1,8 @@
 package Client;
 
+import Utils.Const;
+import java.util.Arrays;
+
 public class ControladorComunicacions extends Thread {
 
     protected Model_Client model;
@@ -14,10 +17,12 @@ public class ControladorComunicacions extends Thread {
     public void run() {
         while(true){
            
-             int[] directions= comms.rebre(); // rebre missatge servidor i accions corresponents
-            
-             model.dibuixaLineas(directions);
-    
+             int[] posicions= comms.rebre(); // rebre missatge servidor i accions corresponents
+             model.dibuixaLineas(posicions);
+             if (Arrays.equals(posicions, Const.finishCode)){
+                System.out.println("ACABA THREAD rebre");
+                return;
+             }
         }
     }
 }

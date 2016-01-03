@@ -174,7 +174,6 @@ public class Model_Servidor extends Observable{
                     
                     //CAMBIAR PER FER "GAME OVER"
                     acabaPartida();
-//                   System.exit(0);
                    
 	    	}
 	    }
@@ -189,8 +188,8 @@ public class Model_Servidor extends Observable{
 	}
 
 	protected void avisarObservadors(int accio){
-		setChanged();
-                
+		
+                setChanged();
                 if (accio == Const.UPDATE_POSITION) notifyObservers(getLastPosition());
                 if (accio == Const.ACABA_PARTIDA) notifyObservers(Const.ACABA_PARTIDA);
 

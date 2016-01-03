@@ -38,7 +38,8 @@ public class ServidorNIO extends Thread implements Observer {
     protected ServerSocketChannel ssc;
     protected ServerSocket ss;
     protected Selector selector;
-
+    protected ByteBuffer bbReceptor;
+    protected ByteBuffer bbEnviador;
     protected ArrayList<SocketChannel> arraySocketChannels;
 
     public ServidorNIO(int port, Model_Servidor model, Controlador_Servidor controlador) throws IOException {
@@ -52,6 +53,9 @@ public class ServidorNIO extends Thread implements Observer {
         ssc.configureBlocking(false); //Configurem que NO bloquejant
         ss = ssc.socket();
         ss.bind(new InetSocketAddress(port));
+        
+        bbReceptor = ByteBuffer.allocate(4);
+        bbEnviador = ByteBuffer.allocate(16);
     }
 
     @Override
@@ -69,17 +73,19 @@ public class ServidorNIO extends Thread implements Observer {
                 Iterator<SelectionKey> iterador = clausSeleccionades.iterator();
                 while (iterador.hasNext()) {
                     SelectionKey clau = iterador.next();
+                    
+//                    if(!clau.isValid()) ;
+                    
                     if (clau.isAcceptable()) {
-                        //Fer accept
                         ferAccept(clau);
                     } else if (clau.isReadable()) {
-                        // Fer echo
                         rebre(clau);
                     }
                     iterador.remove();
                 }
             }
         } catch (IOException ex) {
+            Logger.getLogger(ServidorNIO.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
@@ -97,32 +103,32 @@ public class ServidorNIO extends Thread implements Observer {
 
     }
 
-    public void rebre(SelectionKey clau) throws IOException {
+    public synchronized void rebre(SelectionKey clau) throws IOException {
         SocketChannel s = ((SocketChannel) clau.channel());
         int userId = arraySocketChannels.indexOf(s);
-
-        ByteBuffer espai = ByteBuffer.allocate(4);
-        s.read(espai);
-        espai.flip();
-        controlador.keyPressed(espai.getInt(), userId);
+        
+        bbReceptor.clear();
+        s.read(bbReceptor);
+        bbReceptor.flip();
+        controlador.keyPressed(bbReceptor.getInt(), userId);
 
     }
 
     @Override
-    public void update(Observable o, Object arg) {
+    public synchronized void update(Observable o, Object arg) {
 
         //Si el que volem és actualitzar les posicions al joc
         if (arg instanceof int[]) {
             int[] lastPosition = (int[]) arg;
-
-            ByteBuffer bb = ByteBuffer.allocate(16);
-            bb.asIntBuffer().put(lastPosition);
+            
+            bbEnviador.clear();
+            bbEnviador.asIntBuffer().put(lastPosition);
 
             if (arraySocketChannels.size() > 1) {
                 try {
-                    arraySocketChannels.get(0).write(bb);
-                    bb.position(0);
-                    arraySocketChannels.get(1).write(bb);
+                    arraySocketChannels.get(0).write(bbEnviador);
+                    bbEnviador.position(0);
+                    arraySocketChannels.get(1).write(bbEnviador);
                 } catch (IOException ex) {
                     Logger.getLogger(ServidorNIO.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -133,17 +139,27 @@ public class ServidorNIO extends Thread implements Observer {
             if ((int) arg == Const.ACABA_PARTIDA) {
                 System.out.println("AVCABA PARTIDA!" + arraySocketChannels.size());
                 controlador.acaba();
-
+                
+                bbEnviador.clear();
+                bbEnviador.asIntBuffer().put(Const.finishCode);
+                
                 for (SocketChannel s : arraySocketChannels) {
                     try {
+                        s.write(bbEnviador);
+                        bbEnviador.position(0);
                         System.out.println("REMOVE SOCKET!");
                         s.close();
 
-                    } catch (IOException ex) {
-                        Logger.getLogger(ServidorNIO.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    } catch (IOException ex) {}
                 }
                 arraySocketChannels.clear();
+                
+                                //Aixó serveix per a algo??
+
+                //Aixó serveix per a algo??
+                for(SelectionKey key : selector.keys()){
+                    key.cancel();
+                }
             }
         }
     }

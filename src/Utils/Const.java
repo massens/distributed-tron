@@ -16,6 +16,8 @@ public interface Const {
 
     public static final int STEP = 1;
     public static final int TASKPERIOD = 50;
+    
+    public static final int[] finishCode= new int[] {-1,-1,-1,-1};
 
 
     

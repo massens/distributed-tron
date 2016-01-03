@@ -6,6 +6,9 @@ import java.net.*;
 import java.nio.*;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.*;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ClientStream { //implements Comunicacions {
 
@@ -21,6 +24,7 @@ public class ClientStream { //implements Comunicacions {
         sc.configureBlocking(true);
         bbReceptor = ByteBuffer.allocate(16);
         bbEnviador = ByteBuffer.allocate(4);
+        
     }
 
     public synchronized void enviar(int provisional_Direction1) {
@@ -53,9 +57,14 @@ public class ClientStream { //implements Comunicacions {
         int[] directions = new int[4];
         bbReceptor.asIntBuffer().get(directions, 0, 4);
         
-//        if (directions[0] == -1) System.out.println("EM CRIDEN CLOSE");
-        
-//        bbReceptor.asIntBuffer().get(directions, 1, 3);
+        if (Arrays.equals(directions, Const.finishCode)){
+            System.out.println("Client CLOSE");
+
+            try {
+                sc.close();
+            } catch (IOException ex) {}            
+        }
+
         return directions;
     }
 }
