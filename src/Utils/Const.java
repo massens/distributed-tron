@@ -25,8 +25,11 @@ public interface Const {
     public static final int JUMP_LENGTH = 30;
     
     //Accions en NotificaObservadors
-      public static final int UPDATE_POSITION = 0;
-      public static final int ACABA_PARTIDA = 1;
-      public static final int ENVIA_BOMBA = 2;
+    public static final int UPDATE_POSITION = 0;
+    public static final int ACABA_PARTIDA = 1;
+    public static final int ENVIA_BOMBA = 2;
+    
+    //No s'hauria de canviar el numero de jugadors
+    public static final int NUM_JUGADORS = 2;
 
 }

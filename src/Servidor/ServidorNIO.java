@@ -85,6 +85,7 @@ public class ServidorNIO extends Thread implements Observer {
     }
 
     public void ferAccept(SelectionKey clau) throws IOException {
+        System.out.println("Accept Client");
         SocketChannel s = ((ServerSocketChannel) clau.channel()).accept();
         s.configureBlocking(false);
         s.register(selector, SelectionKey.OP_READ);
@@ -144,6 +145,8 @@ public class ServidorNIO extends Thread implements Observer {
                     }
                 }
                 arraySocketChannels.clear();
+                //Aqui està el problema que fa que no es puguin fer més de 2 partides, tot i que aquesta funció es crida, quan afegim
+                //un socketChannel no es posa a l'array amb index 0 sino amb index 2;
             }
         }
     }

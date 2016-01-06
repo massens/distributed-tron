@@ -26,6 +26,10 @@ public class Coord {
         this.y=y;
         
     }
+    public Coord(Coord c){
+        this.x=c.getX();
+        this.y=c.getY();
+    }
 
     public void setX(int x) {
         this.x = x;
@@ -43,5 +47,11 @@ public class Coord {
         return y;
     }
     
+    public void incX(int valor){
+        x+=valor;
+    }
     
+    public void incY(int valor){
+        y+=valor;
+    }
 }
