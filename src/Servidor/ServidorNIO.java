@@ -38,7 +38,8 @@ public class ServidorNIO extends Thread implements Observer {
     protected ServerSocketChannel ssc;
     protected ServerSocket ss;
     protected Selector selector;
-
+    protected ByteBuffer bbReceptor;
+    protected ByteBuffer bbEnviador;
     protected ArrayList<SocketChannel> arraySocketChannels;
 
     public ServidorNIO(int port, Model_Servidor model, Controlador_Servidor controlador) throws IOException {
@@ -52,32 +53,42 @@ public class ServidorNIO extends Thread implements Observer {
         ssc.configureBlocking(false); //Configurem que NO bloquejant
         ss = ssc.socket();
         ss.bind(new InetSocketAddress(port));
+        
+        bbReceptor = ByteBuffer.allocate(4);
+        bbEnviador = ByteBuffer.allocate(16);
     }
 
     @Override
     public void run() {
         try {
-            System.out.println("OPEN!");
+            System.out.println("[Server Opened]");
             selector = Selector.open();
             ssc.register(selector, SelectionKey.OP_ACCEPT);
             while (true) {
-                int canalsPreparats = selector.select();
-                if (canalsPreparats == 0) {
-                    continue;
-                }
-                Set<SelectionKey> clausSeleccionades = selector.selectedKeys();
-                Iterator<SelectionKey> iterador = clausSeleccionades.iterator();
-                while (iterador.hasNext()) {
-                    SelectionKey clau = iterador.next();
-                    if (clau.isAcceptable()) {
-                        //Fer accept
-                        ferAccept(clau);
-                    } else if (clau.isReadable()) {
-                        // Fer echo
-                        rebre(clau);
+                    int canalsPreparats = selector.select();
+                    if (canalsPreparats == 0) {
+                        continue;
                     }
-                    iterador.remove();
-                }
+                    Set<SelectionKey> clausSeleccionades = selector.selectedKeys();
+                    Iterator<SelectionKey> iterador = clausSeleccionades.iterator();
+                    while (iterador.hasNext()) {
+                        SelectionKey clau = iterador.next();
+                        
+                        //CONCURRENCIA claus
+                        //Les claus son un recurs compartit, ja que quan finalitza
+                        //el joc, el métode update() les cancela. Per aquest motiu
+                        //quan en fem us, synchronitzem el objecte, i comprovem
+                        //que siguin vàlides
+                        synchronized(this){
+                            if (clau.isValid() && clau.isAcceptable()) {
+                                ferAccept(clau);
+                            } else if (clau.isValid() && clau.isReadable()) {
+                                rebre(clau);
+                            }
+                        }
+                        iterador.remove();
+                    }
+                
             }
         } catch (IOException ex) {
         }
@@ -85,68 +96,100 @@ public class ServidorNIO extends Thread implements Observer {
     }
 
     public void ferAccept(SelectionKey clau) throws IOException {
-        System.out.println("Accept Client");
         SocketChannel s = ((ServerSocketChannel) clau.channel()).accept();
         s.configureBlocking(false);
         s.register(selector, SelectionKey.OP_READ);
         arraySocketChannels.add(s);
 
+        System.out.println("Conexió Acceptada | "+arraySocketChannels.size()+" jugadors conectats");
+
+        //INICI DEL JOC 
         //Inicia el Joc quan es conecta el 2n Jugador
         if (arraySocketChannels.size() > 1) {
-            
+            System.out.println("~Comença el Joc!~");
             controlador.inici();
+            
+            //Fem Broadcast de les millors puntuacions
+            int[] score = model.getBestScore();
+            enviar(new int[] {Const.ENVIA_PUNTIACIONS, Const.ENVIA_PUNTIACIONS, score[0], score[1]});
         }
+        
+      
 
     }
 
-    public void rebre(SelectionKey clau) throws IOException {
+    //CONCURRENCIA rebre i enviar
+    //Aquests dos métodes utilitzen recursos compartits, els buffers d'enviament
+    //i recepció, per tant els synchronitzem.
+    public synchronized void rebre(SelectionKey clau) throws IOException {
         SocketChannel s = ((SocketChannel) clau.channel());
         int userId = arraySocketChannels.indexOf(s);
+        bbReceptor.clear();
+        s.read(bbReceptor);
+        bbReceptor.flip();
 
-        ByteBuffer espai = ByteBuffer.allocate(4);
-        s.read(espai);
-        espai.flip();
-        controlador.keyPressed(espai.getInt(), userId);
-
+        //Comprovem que hagi rebut un Integer
+        if(bbReceptor.remaining() == 4) controlador.keyPressed(bbReceptor.getInt(), userId);
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
-
-        //Si el que volem és actualitzar les posicions al joc
-        if (arg instanceof int[]) {
-            int[] lastPosition = (int[]) arg;
-            ByteBuffer bb = ByteBuffer.allocate(lastPosition.length*4);
-            bb.asIntBuffer().put(lastPosition);
-            //System.out.printf("J1: %d %d;   J2: %d %d\n", lastPosition[0],lastPosition[1],lastPosition[2],lastPosition[3]);
-            if (arraySocketChannels.size() > 1) {
+    public synchronized void enviar(int[] paquet){
+        //Algoritme que envia Integers de 4 en 4. El argument 'paquet' sempre
+        //és multiple de 4.
+        for(int i = 0; i < paquet.length; i += 4){
+            bbEnviador.clear();
+            bbEnviador.asIntBuffer().put(paquet, i, 4);
+            for(SocketChannel sc : arraySocketChannels){
+                bbEnviador.position(0);
                 try {
-                    arraySocketChannels.get(0).write(bb);
-                    bb.position(0);
-                    arraySocketChannels.get(1).write(bb);
+                    sc.write(bbEnviador);
                 } catch (IOException ex) {
                     Logger.getLogger(ServidorNIO.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-        }   
+        }
+
+    }
+    
+    @Override
+    public void update(Observable o, Object arg) {
         
+        //ENVIAR POSICIONS
+        //Si el que volem és actualitzar les posicions al joc
+        if (arg instanceof int[]) {
+            int[] lastPosition = (int[]) arg;
+            enviar(lastPosition);
+        }
         
-        
-        
+        //ACABAR PARTIDA        
         //Si el que volem és acabar la partida
         else if (arg instanceof Integer) {
             if ((int) arg == Const.ACABA_PARTIDA) {
+                System.out.println("~Partida Acabada | Desconectem " + arraySocketChannels.size() + " jugadors");
                 controlador.acaba();
-                for (SocketChannel s : arraySocketChannels) {
-                    try {
-                        s.close();
-                    } catch (IOException ex) {
-                        Logger.getLogger(ServidorNIO.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                enviar(Const.FINISH_CODE);
+                
+
+                System.out.print("Cancelació de les Claus...");
+                
+                //CONCURRENCIA claus
+                //Les claus son recursos compartits. Un dels problemes que ens podem trobar, 
+                //es que abans de que els clients rebin el FINISH_CODE, enviïn un paquet,
+                //i quan es procesi la clau sigui cancelada.
+                
+                //CANCELEM LES CLAUS
+                //Hem de cancelar només les claus que pertanyen a conexions amb
+                //clients, que son les que retornen un SocketChannel quan invoquem
+                //key.channel()
+                synchronized(this){
+                    for (SelectionKey key : selector.keys()) {
+                        if( key.channel() instanceof SocketChannel && arraySocketChannels.contains((SocketChannel) key.channel())){
+                            key.cancel();
+                            System.out.print(" | Clau cancelada");
+                        }
+                    }   
                 }
                 arraySocketChannels.clear();
-                //Aqui està el problema que fa que no es puguin fer més de 2 partides, tot i que aquesta funció es crida, quan afegim
-                //un socketChannel no es posa a l'array amb index 0 sino amb index 2;
+                System.out.println("\nArray de SocketChannels 'cleared'");
             }
         }
     }

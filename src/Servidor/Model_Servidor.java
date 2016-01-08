@@ -18,27 +18,21 @@ import java.util.*;
 
 public class Model_Servidor extends Observable {
 
-//    Coord centre[] = new Coord[2];
-//
-//    int currentDirection[];
-//    int positionsToSend[];
-//
-//    ArrayList<Coord> path1;
-//    ArrayList<Coord> path2;
-//
-//    int tipusJugadors[];
-    
     Jugador jugador[];
     
     //Mides de la finestra
     int windowHeight;
     int windowWidth;
     
+    private Score bestScore;
+    private Score lastScore;
+    
     Vista_Client v;
 
     public Model_Servidor() {
         //Construir vars
-
+        lastScore = new Score(0,0);
+        bestScore = new Score(0,0);
         jugador = new Jugador[Const.NUM_JUGADORS];
         
         for(int i=0; i<Const.NUM_JUGADORS; i++){
@@ -46,161 +40,71 @@ public class Model_Servidor extends Observable {
         }
         
         //A partir d'aqui considerem que tenim només 2 jugadors.
-//        centre[0] = new Coord(40, 40);
-//        centre[1] = new Coord(600, 440);
         jugador[0].setCentre(new Coord(40,40));
         jugador[1].setCentre(new Coord(600,440));
 
         //Direcció inicial
-        
-        //currentDirection = new int[2];
-        
-//        currentDirection[0] = Const.RIGHT;
-//        currentDirection[1] = Const.LEFT;
         jugador[0].setCurrentDirection(Const.RIGHT);
         jugador[1].setCurrentDirection(Const.LEFT);
 
-        //Número de posicións que s'han d'enviar pel jugador 1 i 2
-        //positionsToSend = new int[2];
-
-        //Quant avancen a cada "refrescada"
-
-//        path1 = new ArrayList<Coord>();
-//        path2 = new ArrayList<Coord>();
         
-//        tipusJugadors = new int[2];
 
     }
-
-    //Getters
-
-    public ArrayList<Coord> getPath1() {
-        //return path1;
-        return jugador[0].getPath();
-    }
-
-    public ArrayList<Coord> getPath2() {
-        //return path2;
-        return jugador[1].getPath();
-    }
-
-//    public int getTipusJugadors(int index) {
-//        return tipusJugadors[index];
-//    }
 
     public void update(int provisional_Direction1, int provisional_Direction2) {
         updateJugador(provisional_Direction1, 0);
         updateJugador(provisional_Direction2, 1);
-        //System.out.println("Direccions Jugadors:" + currentDirection[0]+currentDirection[1]);
         dibuixaLineas();
 
-//                avisarObservadors();
     }
 
     //Funcions especials per tractar dades
     
 
     public void dibuixaLineas() {
-
-        //System.out.println("Dibuixa Lineas amb direccions: "+ currentDirection[0] +" "+currentDirection[1]);
         
         jugador[0].movimentJugador();
         jugador[1].movimentJugador();
 
         //Afegeix les noves posicions
-//        path1.add(new Coord(centre[0]));
-//        path2.add(new Coord(centre[1]));
         jugador[0].addCoordToPath(new Coord(jugador[0].getCentre()));
         jugador[1].addCoordToPath(new Coord(jugador[1].getCentre()));
 
         //Avisa a la Vista_Client
         avisarObservadors(Const.UPDATE_POSITION);
-
-        //CONDICIÓ DE COL·LISIÓ
+        
+        //CONDICIÓ DE COL·LISIÓ per al path del Jugador 1
         for (int x = 0; x < jugador[0].getPath().size() - 1; x++) {
             if (((jugador[0].getCentre().equals(jugador[0].getPath().get(x))))) {
                 //1 ha xocat, guanya 2
                 System.out.println("Victoria de J2");
+                lastScore.setScore(0,jugador[1].getPath().size());
                 acabaPartida();
+                
             } else if (jugador[1].getCentre().equals(jugador[0].getPath().get(x))) {
                 //2 ha xocat, guanya 1
                 System.out.println("Victoria de J1");
+                lastScore.setScore(jugador[0].getPath().size(),0);
                 acabaPartida();
             }
         }
-        for (int x = 0; x < jugador[1].getPath().size() - 1; x++) {
 
+        //CONDICIÓ DE COL·LISIÓ per al path del Jugador 2
+        for (int x = 0; x < jugador[1].getPath().size() - 1; x++) {
             if (jugador[0].getCentre().equals(jugador[1].getPath().get(x))) {
                 //1 ha xocat, guanya 2
                 System.out.println("Victoria de J2");
+                lastScore.setScore(0,jugador[1].getPath().size());
                 acabaPartida();
+
             } else if (jugador[1].getCentre().equals(jugador[1].getPath().get(x))) {
                 //2 ha xocat, guanya 1
                 System.out.println("Victoria de J1");
+                lastScore.setScore(jugador[0].getPath().size(),0);
                 acabaPartida();
             }
         }
     }
-
-//    public void accioEspecial(int indexJugador) {
-//        
-//        positionsToSend[indexJugador] = 1;
-//
-//        if (tipusJugadors[indexJugador] == Const.BOMBER) {
-//            for (int i = -Const.RADI_BOMBA; i < Const.RADI_BOMBA + 1; i++) {
-//                for (int j = -Const.RADI_BOMBA; j < Const.RADI_BOMBA + 1; j++) {
-//                    if (((currentDirection[indexJugador] == Const.UP || currentDirection[indexJugador] == Const.DOWN) && i == 0)
-//                            || (currentDirection[indexJugador] == Const.LEFT || currentDirection[indexJugador] == Const.RIGHT) && j == 0) {
-//                        //Do nothing
-//                    } else {
-//                        positionsToSend[indexJugador] += 1;
-//
-//                        if (indexJugador == 0) {
-////                            pathx1.add(centrex1 + i);
-////                            pathy1.add(centrey1 + j);
-//                            path1.add(new Coord(jugador[indexJugador].getCentre().getX()+i,jugador[indexJugador].getCentre().getY()+j));
-//                            System.out.println("Bomba en " + (jugador[indexJugador].getCentre().getX() + i) + ":" + (jugador[indexJugador].getCentre().getY() + j));
-//                        } else if (indexJugador == 1) {
-////                            pathx2.add(centrex2 + i);
-////                            pathy2.add(centrey2 + j);
-//                            path2.add(new Coord(jugador[indexJugador].getCentre().getX()+i,jugador[indexJugador].getCentre().getY()+j));
-//                            System.out.println("Bomba en " + (jugador[indexJugador].getCentre().getX() + i) + ":" + (jugador[indexJugador].getCentre().getY() + j));
-//                        }
-//                    }
-//                }
-//            }
-//
-//            
-//        } else if (tipusJugadors[indexJugador] == Const.JUMPER) {
-//            positionsToSend[indexJugador] = 1;
-//
-//            switch (currentDirection[indexJugador]) {
-//                case Const.UP:
-////                        centrey1 -= Const.JUMP_LENGTH;
-//                    jugador[indexJugador].getCentre().setY(jugador[indexJugador].getCentre().getY() - Const.JUMP_LENGTH);
-//                    break;
-//                case Const.DOWN:
-////                        centrey1 += Const.JUMP_LENGTH;
-//                    jugador[indexJugador].getCentre().setY(jugador[indexJugador].getCentre().getY() + Const.JUMP_LENGTH);
-//                    break;
-//                case Const.LEFT:
-////                        centrex1 -= Const.JUMP_LENGTH;
-//                    jugador[indexJugador].getCentre().setX(jugador[indexJugador].getCentre().getX() - Const.JUMP_LENGTH);
-//                    break;
-//                case Const.RIGHT:
-////                        centrex1 += Const.JUMP_LENGTH;
-//                    jugador[indexJugador].getCentre().setX(jugador[indexJugador].getCentre().getX() + Const.JUMP_LENGTH);
-//                    break;
-//            }
-//
-//                
-//            
-//        } else {
-//            //Do nothing
-//        }
-//        //System.out.println("Finalitza accio especial");
-//
-//    }
 
     public void afegirVista(Vista_Client obsr) {
         v = obsr;
@@ -209,17 +113,11 @@ public class Model_Servidor extends Observable {
 
     protected void avisarObservadors(int accio) {
         setChanged();
-
-        if (accio == Const.UPDATE_POSITION) {
-            notifyObservers(getLastPositions(jugador[0].getPositionsToSend(), jugador[1].getPositionsToSend()));
-        }
-        if (accio == Const.ACABA_PARTIDA) {
-            notifyObservers(Const.ACABA_PARTIDA);
-        }
-
+        if (accio == Const.UPDATE_POSITION)  notifyObservers(getLastPositions(jugador[0].getPositionsToSend(), jugador[1].getPositionsToSend()));
+        if (accio == Const.ACABA_PARTIDA)  notifyObservers(Const.ACABA_PARTIDA);
     }
 
-    //updateJugador
+    //UPDATEJUGADOR 
     //Actualitza la direccio només en els casos permesos
     private void updateJugador(int direccioRebuda, int indexJugador) {
 
@@ -242,7 +140,8 @@ public class Model_Servidor extends Observable {
             j.setPositionsToSend(1);
         } else if (direccioRebuda == Const.SPACEBAR) {
             j.accioEspecial();
-        } //Rebem el tipus de Jugador que volen ser
+        }
+        //Rebem el tipus de Jugador que volen ser
         else if (direccioRebuda == Const.BOMBER) {
             j.setTipusJugador(direccioRebuda);
             //System.out.println("El jugador " + indexJugador + " es de tipus BOMBER");
@@ -255,6 +154,11 @@ public class Model_Servidor extends Observable {
         }
     }
 
+    //ÚLTIMES POSICIONS DELS JUGADORS
+    //Normalment només s'ha d'enviar una coordenada per a cada jugador. En el cas
+    //de que un jugador hagi enviat una bomba, s'hauràn d'enviar totes les coordenades 
+    //de la bomba. Per enviar més coordenades d'un jugador que de l'altre, 
+    //s'omplen coordenades amb -1, -1. Per indicar que no s'ha de tenir en compte
     private int[] getLastPositions(int positionsToSend1, int positionsToSend2) {
         int positionsToSend = Math.max(positionsToSend1, positionsToSend2);
         int[] positions = new int[positionsToSend * 4];
@@ -268,7 +172,6 @@ public class Model_Servidor extends Observable {
                 positions[i * 4] = -1;
                 positions[i * 4 + 1] = -1;
             }
-
             if (-positionsToSend2 + i < 0) {
                 positions[i * 4 + 2] = jugador[1].getPath().get(jugador[1].getPath().size() - positionsToSend2 + i).getX();
                 positions[i * 4 + 3] = jugador[1].getPath().get(jugador[1].getPath().size() - positionsToSend2 + i).getY();
@@ -281,19 +184,7 @@ public class Model_Servidor extends Observable {
     }
 
     private void acabaPartida() {
-
         
-//        centre[0] = new Coord(40, 40);
-//        centre[1] = new Coord(600, 440);
-//
-//        //Direcció inicial
-//        currentDirection = new int[2];
-//        currentDirection[0] = Const.RIGHT;
-//        currentDirection[1] = Const.LEFT;
-//      
-//        path1 = new ArrayList<Coord>();
-//        path2 = new ArrayList<Coord>();
-
         jugador = new Jugador[Const.NUM_JUGADORS];
         
         for(int i = 0; i<Const.NUM_JUGADORS; i++){
@@ -317,9 +208,27 @@ public class Model_Servidor extends Observable {
         this.windowHeight = windowHeight;
         this.windowWidth = windowWidth;
     }
+    
+    public void setBestScore(int score1, int score2){
+        bestScore.setScore(score1, score2);
+    }
+    
+    //Getters
 
-//    public void setTipusJugadors(int tipusJugador, int index) {
-//        tipusJugadors[index] = tipusJugador;
-//    }
+    public ArrayList<Coord> getPath1() {
+        return jugador[0].getPath();
+    }
+
+    public ArrayList<Coord> getPath2() {
+        return jugador[1].getPath();
+    }
+    
+    public int[] getScore(){
+        return lastScore.getScore();
+    }
+    
+    public int[] getBestScore(){
+        return bestScore.getScore();
+    }
 
 }

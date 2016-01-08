@@ -1,4 +1,4 @@
-package pantalla_principal;
+package Client;
 
 import Client.Client;
 import Client.ClientStream;
@@ -198,7 +198,6 @@ public class PantallaPrincipal {
                 //Enviem el tipus selecconat al servidor
                 cc.enviar(tipus_jugador);
                 
-//                new Client();
                 //amaga el menu
                 principal.setVisible(false);
             } catch (IOException ex) {

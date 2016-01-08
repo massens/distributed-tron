@@ -6,14 +6,14 @@ import java.awt.event.KeyListener;
 import java.util.*;
 
 
-public class Controlador_Client implements KeyListener{
+public class Controlador_EntradaClient implements KeyListener{
 
 	protected ClientStream comunicacions;
 	protected Vista_Client vista;
 	protected Model_Client model;
 	protected int provisional_Direction1;
 
-	public Controlador_Client(Vista_Client vista, Model_Client model, ClientStream comunicacions){
+	public Controlador_EntradaClient(Vista_Client vista, Model_Client model, ClientStream comunicacions){
 		this.vista = vista;
 		this.model = model;
 		this.comunicacions = comunicacions;

@@ -22,9 +22,7 @@ public class AccioBomber implements AccioEspecial {
                         jug.incPositionsToSend(1);
 
                         jug.addCoordToPath(new Coord(jug.getCentre().getX()+i,jug.getCentre().getY()+j));
-                        
-                        System.out.println("Bomba en " + (jug.getCentre().getX() + i) + ":" + (jug.getCentre().getY() + j));
-                        
+                                                
                     }
                 }
             }

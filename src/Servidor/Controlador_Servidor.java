@@ -29,16 +29,16 @@ public class Controlador_Servidor {
     }
 
     public void inici() {
-        //Rebem els tipus de jugadors
-        
-        
         //Funcio Update
         t = new Timer();
         t.scheduleAtFixedRate(new UpdateTasca(), 0, Const.TASKPERIOD);
+        System.out.println("[Timer] Start schedule");
     }
     
     public void acaba() {
         t.cancel();
+        System.out.println("[Timer] End schedule");
+
     }
 
     public void keyPressed(int direccioRebuda, int indexJugador) {

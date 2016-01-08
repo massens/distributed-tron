@@ -54,4 +54,8 @@ public class Coord {
     public void incY(int valor){
         y+=valor;
     }
+    
+    public boolean equals(Coord c){
+        return (this.x == c.getX()) && (this.y == c.getY());
+    }
 }

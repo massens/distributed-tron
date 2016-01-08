@@ -23,22 +23,7 @@ public class Client {
 	Model_Client model = new Model_Client();
 	final Vista_Client gui = new Vista_Client(model);
 	
-        Controlador_Client controlador = new Controlador_Client(gui,model, clientComunicacions);
-        
-        ControladorComunicacions controladorComms = new ControladorComunicacions(model, clientComunicacions);
-        controladorComms.start();
-    }
-    
-    
-    
-    
-    public static void main(String[] args) throws UnknownHostException, IOException{
-        ClientStream clientComunicacions = new ClientStream(Comms.portServidor);
-
-	Model_Client model = new Model_Client();
-	final Vista_Client gui = new Vista_Client(model);
-	
-        Controlador_Client controlador = new Controlador_Client(gui,model, clientComunicacions);
+        Controlador_EntradaClient controlador = new Controlador_EntradaClient(gui,model, clientComunicacions);
         
         ControladorComunicacions controladorComms = new ControladorComunicacions(model, clientComunicacions);
         controladorComms.start();
@@ -50,5 +35,15 @@ public class Client {
         
     }
     
+        
+    
+    
+    //MAIN
+    //Per al testeig, hem utilitzat aquest main per llançar el Client directament
+    //sense haver llançar primer la Pantalla Principal
+    
+    public static void main(String[] args) throws UnknownHostException, IOException{
+        new Client();
+    }
     
 }

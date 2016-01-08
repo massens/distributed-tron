@@ -1,6 +1,7 @@
 package Client;
 
 
+import Utils.Const;
 import java.util.ArrayList;
 
 import java.util.*;
@@ -19,6 +20,8 @@ public class Model_Client extends Observable {
     ArrayList<Integer> pathy2;
 
     Vista_Client v;
+    
+    int[] bestScores;
 
     public Model_Client() {
 
@@ -28,12 +31,21 @@ public class Model_Client extends Observable {
         pathx2 = new ArrayList<Integer>();
         pathy2 = new ArrayList<Integer>();
         
+        bestScores = new int[2];
+        bestScores[0] = 0;
+        bestScores[1] = 0;
+        
 
     }
 
     //Funcions especials per tractar dades
-    public int dibuixaLineas(int[] posicions) {
+    public void dibuixaLineas(int[] posicions) {
 
+        if (Arrays.equals(posicions, Const.FINISH_CODE)) {
+            //Acaba la frame del joc
+            v.closeFrame();
+            return;
+        }
         centrex1 = posicions[0];
         centrey1 = posicions[1];
         centrex2 = posicions[2];
@@ -48,52 +60,6 @@ public class Model_Client extends Observable {
         //Avisa a la Vista_Client
         avisarObservadors();
 
-        //CONDICIÓ DE COL·LISIÓ
-//       
-//        for (int x = 0; x < pathx1.size() - 1; x++) {
-//            if (((centrex1 == pathx1.get(x)) && (centrey1 == pathy1.get(x)))
-//                    || ((centrex2 == pathx2.get(x)) && (centrey2 == pathy2.get(x)))
-//                    || ((centrex1 == pathx2.get(x)) && (centrey1 == pathy2.get(x)))
-//                    || ((centrex2 == pathx1.get(x)) && (centrey2 == pathy1.get(x)))) {
-//
-//                //Acaba la frame del joc
-//                 v.closeFrame();
-//            }
-//        }
-        
-            for (int x = 0; x<pathx1.size()-1 ;x++){
-	    	if (((centrex1 == pathx1.get(x)) && (centrey1 == pathy1.get(x))) ){
-                    //1 ha xocat, guanya 2
-                    System.out.println("Victoria de J2");
-                    v.closeFrame();
-                    return 0;
-
-                } else if (((centrex2 == pathx1.get(x)) && (centrey2 == pathy1.get(x)))){
-                    //2 ha xocat, guanya 1
-                    System.out.println("Victoria de J1");
-                    v.closeFrame();
-                    return 0;
-
-                }
-            }
-            for (int x=0;x<pathx2.size()-1;x++){
-                
-                if ((( centrex1 == pathx2.get(x)) && (centrey1 == pathy2.get(x)))){
-                    //1 ha xocat, guanya 2
-                    System.out.println("Victoria de J2");
-                    v.closeFrame();
-                    return 0;
-
-                } else if((centrex2 == pathx2.get(x)) && (centrey2 == pathy2.get(x))){ 
-                    //CAMBIAR PER FER "GAME OVER"
-                    //2 ha xocat, guanya 1
-                    System.out.println("Victoria de J1");
-                    v.closeFrame();
-                    return 0;
-                    //System.exit(0);
-	    	}
-            } 
-        return 1;
     }
 
     public void afegirVista(Vista_Client obsr) {
@@ -121,5 +87,17 @@ public class Model_Client extends Observable {
 
     public ArrayList<Integer> getPathY2() {
         return pathy2;
+    }
+    
+    public void setScores(int score1, int score2){
+        bestScores[0] = score1;
+        bestScores[1] = score2;
+        
+        //DECISIÓ DE DISENY
+        //Decidim no fer avisarObservadors() ja que la actualizació de
+        //les puntuacions es fa una sola vegada al inici del joc
+        //Per millorar la efiència, no obliguem a la vista a comprovar que tingui
+        //les puntuacions cada cop que es crida update()
+        v.paintScores(bestScores);
     }
 }

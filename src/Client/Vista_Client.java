@@ -5,7 +5,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-import pantalla_principal.PantallaPrincipal;
 
 public class Vista_Client implements Observer {
 
@@ -13,6 +12,9 @@ public class Vista_Client implements Observer {
     JFrame f;
     PanellPintar panelDibuix;
     PantallaPrincipal p;
+    
+    JLabel score1;
+    JLabel score2;
 
     public Vista_Client(Model_Client model) {
         this.model = model;
@@ -27,9 +29,30 @@ public class Vista_Client implements Observer {
                 p.init();
             }
         });
-        f.setSize(Const.SCREENX, Const.SCREENY);
+        //Afegit
+        JPanel taulerPuntuacions = new JPanel();
+        taulerPuntuacions.setLayout(new FlowLayout());
+        taulerPuntuacions.setPreferredSize(new Dimension(Const.SCREENX, 20));
+         
+         score1 = new JLabel(" ");
+        score1.setPreferredSize(new Dimension(100, 10));
+        taulerPuntuacions.add(score1);
+        
+        JLabel text = new JLabel("Best Score");
+        text.setPreferredSize(new Dimension(140, 10));
+        taulerPuntuacions.add(text);
+
+       
+        
+         score2 = new JLabel(" ");
+        score2.setPreferredSize(new Dimension(100, 10));
+        taulerPuntuacions.add(score2);
+        
+        f.add(taulerPuntuacions, BorderLayout.SOUTH);
+        
+        f.setSize(Const.SCREENX, Const.SCREENY + 20);
         panelDibuix = new PanellPintar();
-        f.add(panelDibuix);
+        f.add(panelDibuix, BorderLayout.CENTER);
         //f.pack();
         f.setVisible(true);
 
@@ -51,8 +74,14 @@ public class Vista_Client implements Observer {
         p.init();
         // terminar joc
     }
+    
+    public void paintScores(int[] scores){
+        score1.setText(""+scores[0]);
+        score2.setText(""+scores[1]);
 
-	//--------------------------------------------
+    }
+
+    //--------------------------------------------
     //				Panell Pintar
     //--------------------------------------------
     class PanellPintar extends JPanel {
@@ -66,14 +95,16 @@ public class Vista_Client implements Observer {
                 g.setColor(Color.green);
                 g.fillRect(model.getPathX1().get(x), model.getPathY1().get(x), Const.PATHSIZE, Const.PATHSIZE);
             }
-            
+
             for (int x = 0; x < model.getPathX2().size(); x++) {
                 g.setColor(Color.red);
                 g.fillRect(model.getPathX2().get(x), model.getPathY2().get(x), Const.PATHSIZE, Const.PATHSIZE);
             }
-            
+
         }
 
     }
+    
+    
 
 }

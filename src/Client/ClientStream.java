@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.net.*;
 import java.nio.*;
 import java.nio.channels.SocketChannel;
+import java.util.*;
+
 import java.nio.charset.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,6 +23,9 @@ public class ClientStream { //implements Comunicacions {
         //com a un enter = 4 bytes.
         sc = SocketChannel.open(new InetSocketAddress(2222));
         sc.configureBlocking(true);
+        
+        System.out.println("[Connection Established] Esperant a l'altre jugador...");
+
         bbReceptor = ByteBuffer.allocate(16);
         bbEnviador = ByteBuffer.allocate(4);
     }
@@ -54,16 +59,17 @@ public class ClientStream { //implements Comunicacions {
         bbReceptor.flip();
 
         int[] directions = new int[4];
-        try{
-        bbReceptor.asIntBuffer().get(directions);
-        }catch(BufferUnderflowException ex){
-            //Aixó passa quan es desconecta el Servidor
+        bbReceptor.asIntBuffer().get(directions, 0, 4);
+
+        if (Arrays.equals(directions, Const.FINISH_CODE)){
             try {
+                System.out.println("~ Partida Acabada ~");
                 sc.close();
-            } catch (IOException ex1) {}
-            
-            return null;
+                System.out.println("[Connection Closed]");
+
+            } catch (IOException ex) {}            
         }
+
         return directions;
     }
 }
