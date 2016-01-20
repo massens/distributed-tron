@@ -6,7 +6,6 @@
 package Servidor;
 
 import Utils.*;
-import com.mysql.jdbc.exceptions.MySQLSyntaxErrorException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;

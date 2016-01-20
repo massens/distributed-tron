@@ -54,14 +54,14 @@ public class Model_Servidor extends Observable {
     public void update(int provisional_Direction1, int provisional_Direction2) {
         updateJugador(provisional_Direction1, 0);
         updateJugador(provisional_Direction2, 1);
-        dibuixaLineas();
+        avancaPosicio();
 
     }
 
     //Funcions especials per tractar dades
     
 
-    public void dibuixaLineas() {
+    public void avancaPosicio() {
         
         jugador[0].movimentJugador();
         jugador[1].movimentJugador();
@@ -118,7 +118,7 @@ public class Model_Servidor extends Observable {
     }
 
     //UPDATEJUGADOR 
-    //Actualitza la direccio només en els casos permesos
+    //Actualitza l'estat del jugador només en els casos permesos
     private void updateJugador(int teclaRebuda, int indexJugador) {
 
         Jugador j = jugador[indexJugador];
@@ -138,7 +138,9 @@ public class Model_Servidor extends Observable {
         } else if (teclaRebuda == Const.LEFT && j.getCurrentDirection() != Const.RIGHT) {
             j.setCurrentDirection(teclaRebuda);
             j.setPositionsToSend(1);
-        } else if (teclaRebuda == Const.SPACEBAR) {
+        } 
+
+        else if (teclaRebuda == Const.SPACEBAR) {
             j.accioEspecial();
         }
         //Rebem el tipus de Jugador que volen ser
@@ -162,9 +164,8 @@ public class Model_Servidor extends Observable {
     private int[] getLastPositions(int positionsToSend1, int positionsToSend2) {
         int positionsToSend = Math.max(positionsToSend1, positionsToSend2);
         int[] positions = new int[positionsToSend * 4];
-
+        //Algoritme
         for (int i = 0; i < positionsToSend; i++) {
-
             if (-positionsToSend1 + i < 0) {
                 positions[i * 4] = jugador[0].getPath().get(jugador[0].getPath().size() - positionsToSend1 + i).getX();
                 positions[i * 4 + 1] = jugador[0].getPath().get(jugador[0].getPath().size() - positionsToSend1 + i).getY();
@@ -184,7 +185,7 @@ public class Model_Servidor extends Observable {
     }
 
     private void acabaPartida() {
-        
+        //Es fa un reset de les variables de la partida
         jugador = new Jugador[Const.NUM_JUGADORS];
         
         for(int i = 0; i<Const.NUM_JUGADORS; i++){
@@ -214,7 +215,6 @@ public class Model_Servidor extends Observable {
     }
     
     //Getters
-
     public ArrayList<Coord> getPath1() {
         return jugador[0].getPath();
     }

@@ -2,22 +2,16 @@ package Client;
 
 
 import Utils.Const;
+import Utils.Coord;
+import Utils.Jugador;
 import java.util.ArrayList;
 
 import java.util.*;
 
 public class Model_Client extends Observable {
 
-    int centrex1;
-    int centrey1;
-    int centrex2;
-    int centrey2;
 
-    //Quant avançen a cada "refrescada"
-    ArrayList<Integer> pathx1;
-    ArrayList<Integer> pathy1;
-    ArrayList<Integer> pathx2;
-    ArrayList<Integer> pathy2;
+    Jugador jugadors[];
 
     Vista_Client v;
     
@@ -26,10 +20,14 @@ public class Model_Client extends Observable {
     public Model_Client() {
 
         //Quant avançen a cada "refrescada"
-        pathx1 = new ArrayList<Integer>();
-        pathy1 = new ArrayList<Integer>();
-        pathx2 = new ArrayList<Integer>();
-        pathy2 = new ArrayList<Integer>();
+
+        
+        jugadors = new Jugador[2];
+        jugadors[0] = new Jugador();
+        jugadors[1] = new Jugador();
+        
+        jugadors[0].setCentre(new Coord());
+        jugadors[1].setCentre(new Coord());
         
         bestScores = new int[2];
         bestScores[0] = 0;
@@ -39,7 +37,7 @@ public class Model_Client extends Observable {
     }
 
     //Funcions especials per tractar dades
-    public void afegeixPosicio(int[] posicions) {
+    public void avancaPosicio(int[] posicions) {
 
         if (Arrays.equals(posicions, Const.FINISH_CODE)) {
             //Acaba la frame del joc
@@ -47,17 +45,18 @@ public class Model_Client extends Observable {
             return;
         }
         
-        centrex1 = posicions[0];
-        centrey1 = posicions[1];
-        centrex2 = posicions[2];
-        centrey2 = posicions[3];
+        jugadors[0].getCentre().setX(posicions[0]);
+        jugadors[0].getCentre().setY(posicions[1]);
+        jugadors[1].getCentre().setX(posicions[2]);
+        jugadors[1].getCentre().setY(posicions[3]);
 
         //Afegeix les noves posicions
-        if (centrex1 != -1) pathx1.add(centrex1);
-        if (centrey1 != -1) pathy1.add(centrey1);
-        if (centrex2 != -1) pathx2.add(centrex2);
-        if (centrey2 != -1) pathy2.add(centrey2);
-
+        if ((jugadors[0].getCentre().getX() != -1) || (jugadors[0].getCentre().getY() != -1)){
+            jugadors[0].addCoordToPath(new Coord(jugadors[0].getCentre()));
+        }
+        if ((jugadors[1].getCentre().getX() != -1) || (jugadors[1].getCentre().getY() != -1)){
+            jugadors[1].addCoordToPath(new Coord(jugadors[1].getCentre()));
+        }
         //Avisa a la Vista_Client
         avisarObservadors();
 
@@ -74,21 +73,16 @@ public class Model_Client extends Observable {
     }
 
     //Getters
-    public ArrayList<Integer> getPathX1() {
-        return pathx1;
+    public ArrayList<Coord> getPath1() {
+        return jugadors[0].getPath();
     }
 
-    public ArrayList<Integer> getPathY1() {
-        return pathy1;
+
+    public ArrayList<Coord> getPath2() {
+        return jugadors[1].getPath();
     }
 
-    public ArrayList<Integer> getPathX2() {
-        return pathx2;
-    }
 
-    public ArrayList<Integer> getPathY2() {
-        return pathy2;
-    }
     
     public void setScores(int score1, int score2){
         bestScores[0] = score1;

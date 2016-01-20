@@ -27,7 +27,7 @@ public class Controlador_RebrePaquets extends Thread {
                  System.out.println("~ Comença el Joc! ~");
                  System.out.println("Puntuacions Màximes Rebudes");
              }
-             model.afegeixPosicio(posicions);
+             model.avancaPosicio(posicions);
              if (Arrays.equals(posicions, Const.FINISH_CODE)){
                  System.out.println("[Thread Closed] Tanquem el thread al 'ControladorComunicacions', encarregat de rebre");
                  return;

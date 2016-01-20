@@ -77,12 +77,12 @@ public class Vista_Client implements Observer {
     
     public void paintScores(int[] scores){
         //[!] s'ha d'executar al thread d'events!!!!!
-        javax.swing.SwingUtilities.invokeLater(new MyTask(scores));
+        javax.swing.SwingUtilities.invokeLater(new TascaScores(scores));
 
     }
-    private class MyTask implements Runnable{
+    private class TascaScores implements Runnable{
         protected int[] scores;
-        public MyTask(int[] score){
+        public TascaScores(int[] score){
             scores = score;
         }
         public void run(){
@@ -106,14 +106,14 @@ public class Vista_Client implements Observer {
             //Pintar
             g.setColor(Color.BLACK); //Fica tot el fons a negre
             g.fillRect(0, 0, Const.SCREENX, Const.SCREENY);
-            for (int x = 0; x < model.getPathX1().size(); x++) {
+            for (int i = 0; i < model.getPath1().size(); i++) {
                 g.setColor(Color.green);
-                g.fillRect(model.getPathX1().get(x), model.getPathY1().get(x), Const.PATHSIZE, Const.PATHSIZE);
+                g.fillRect(model.getPath1().get(i).getX(), model.getPath1().get(i).getY(), Const.PATHSIZE, Const.PATHSIZE);
             }
 
-            for (int x = 0; x < model.getPathX2().size(); x++) {
+            for (int i = 0; i < model.getPath2().size(); i++) {
                 g.setColor(Color.red);
-                g.fillRect(model.getPathX2().get(x), model.getPathY2().get(x), Const.PATHSIZE, Const.PATHSIZE);
+                g.fillRect(model.getPath2().get(i).getX(), model.getPath2().get(i).getY(), Const.PATHSIZE, Const.PATHSIZE);
             }
 
         }
