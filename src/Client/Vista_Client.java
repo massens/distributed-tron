@@ -77,11 +77,25 @@ public class Vista_Client implements Observer {
     
     public void paintScores(int[] scores){
         //[!] s'ha d'executar al thread d'events!!!!!
-        score1.setText(""+scores[0]);
-        score2.setText(""+scores[1]);
+        javax.swing.SwingUtilities.invokeLater(new MyTask(scores));
 
     }
-
+    private class MyTask implements Runnable{
+        protected int[] scores;
+        public MyTask(int[] score){
+            scores = score;
+        }
+        public void run(){
+            score1.setText(""+scores[0]);
+            score2.setText(""+scores[1]);
+            if (javax.swing.SwingUtilities.isEventDispatchThread()){
+                System.out.println("M'executo al Thread d'events");
+            }
+            else {
+                System.out.println("No m'executo al Thread d'events");
+            }
+        }
+    }
     //--------------------------------------------
     //			Panell Pintar
     //--------------------------------------------

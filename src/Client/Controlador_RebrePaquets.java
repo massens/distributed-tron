@@ -3,12 +3,12 @@ package Client;
 import Utils.Const;
 import java.util.Arrays;
 
-public class ControladorComunicacions extends Thread {
+public class Controlador_RebrePaquets extends Thread {
 
     protected Model_Client model;
     protected ClientStream comms;
 
-    public ControladorComunicacions(Model_Client model, ClientStream comms) {
+    public Controlador_RebrePaquets(Model_Client model, ClientStream comms) {
         this.model = model;
         this.comms = comms;
     }
@@ -27,7 +27,7 @@ public class ControladorComunicacions extends Thread {
                  System.out.println("~ Comença el Joc! ~");
                  System.out.println("Puntuacions Màximes Rebudes");
              }
-             model.dibuixaLineas(posicions);
+             model.afegeixPosicio(posicions);
              if (Arrays.equals(posicions, Const.FINISH_CODE)){
                  System.out.println("[Thread Closed] Tanquem el thread al 'ControladorComunicacions', encarregat de rebre");
                  return;

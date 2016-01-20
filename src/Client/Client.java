@@ -25,11 +25,11 @@ public class Client {
 	
         Controlador_EntradaClient controlador = new Controlador_EntradaClient(gui,model, clientComunicacions);
         
-        ControladorComunicacions controladorComms = new ControladorComunicacions(model, clientComunicacions);
+        Controlador_RebrePaquets controladorComms = new Controlador_RebrePaquets(model, clientComunicacions);
         controladorComms.start();
     }
 
-    public ClientStream getClientStream() {¡
+    public ClientStream getClientStream() {
         return clientComunicacions;
     }
     

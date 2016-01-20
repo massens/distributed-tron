@@ -41,8 +41,8 @@ public class Controlador_Servidor {
 
     }
 
-    public void keyPressed(int direccioRebuda, int indexJugador) {
-        provisional_Key[indexJugador] = direccioRebuda;
+    public void keyPressed(int teclaRebuda, int indexJugador) {
+        provisional_Key[indexJugador] = teclaRebuda;
     }
 
     class UpdateTasca extends TimerTask {

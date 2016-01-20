@@ -45,10 +45,10 @@ public class ClientStream { //implements Comunicacions {
         }
     }
 
-    public int[] rebre() {
-        //Només hi ha un ByteBuffer Receptor, que ens construeix en el 
-        //constructor, per millorar la eficiéncia. Com que només hi ha un thread
-        //que utilitza aquest buffer, la funció no és synchronyzed.
+    public synchronized int[] rebre() {
+        //Només hi ha un ByteBuffer Enviador per eficiéncia. Hi hauran tants
+        //threads que utilitzin aquest buffer com tecles premudes, per tant
+        //el buffer és un recurs compartit i la funció és synchronyzed
 
         bbReceptor.clear();
         try {

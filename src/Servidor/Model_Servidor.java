@@ -119,37 +119,37 @@ public class Model_Servidor extends Observable {
 
     //UPDATEJUGADOR 
     //Actualitza la direccio només en els casos permesos
-    private void updateJugador(int direccioRebuda, int indexJugador) {
+    private void updateJugador(int teclaRebuda, int indexJugador) {
 
         Jugador j = jugador[indexJugador];
         //Tecles Premudes
-        if (direccioRebuda == Const.NOACTION) {
+        if (teclaRebuda == Const.NOACTION) {
             //No fem res
             j.setPositionsToSend(1);
-        } else if (direccioRebuda == Const.UP && j.getCurrentDirection() != Const.DOWN) {
-            j.setCurrentDirection(direccioRebuda);
+        } else if (teclaRebuda == Const.UP && j.getCurrentDirection() != Const.DOWN) {
+            j.setCurrentDirection(teclaRebuda);
             j.setPositionsToSend(1);
-        } else if (direccioRebuda == Const.DOWN && j.getCurrentDirection() != Const.UP) {
-            j.setCurrentDirection(direccioRebuda);
+        } else if (teclaRebuda == Const.DOWN && j.getCurrentDirection() != Const.UP) {
+            j.setCurrentDirection(teclaRebuda);
             j.setPositionsToSend(1);
-        } else if (direccioRebuda == Const.RIGHT && j.getCurrentDirection() != Const.LEFT) {
-            j.setCurrentDirection(direccioRebuda);
+        } else if (teclaRebuda == Const.RIGHT && j.getCurrentDirection() != Const.LEFT) {
+            j.setCurrentDirection(teclaRebuda);
             j.setPositionsToSend(1);
-        } else if (direccioRebuda == Const.LEFT && j.getCurrentDirection() != Const.RIGHT) {
-            j.setCurrentDirection(direccioRebuda);
+        } else if (teclaRebuda == Const.LEFT && j.getCurrentDirection() != Const.RIGHT) {
+            j.setCurrentDirection(teclaRebuda);
             j.setPositionsToSend(1);
-        } else if (direccioRebuda == Const.SPACEBAR) {
+        } else if (teclaRebuda == Const.SPACEBAR) {
             j.accioEspecial();
         }
         //Rebem el tipus de Jugador que volen ser
-        else if (direccioRebuda == Const.BOMBER) {
-            j.setTipusJugador(direccioRebuda);
+        else if (teclaRebuda == Const.BOMBER) {
+            j.setTipusJugador(teclaRebuda);
             //System.out.println("El jugador " + indexJugador + " es de tipus BOMBER");
-        } else if (direccioRebuda == Const.NORMAL) {
-            j.setTipusJugador(direccioRebuda);
+        } else if (teclaRebuda == Const.NORMAL) {
+            j.setTipusJugador(teclaRebuda);
             //System.out.println("El jugador " + indexJugador + " es de tipus NORMAL");
-        } else if (direccioRebuda == Const.JUMPER) {
-            j.setTipusJugador(direccioRebuda);
+        } else if (teclaRebuda == Const.JUMPER) {
+            j.setTipusJugador(teclaRebuda);
             //System.out.println("El jugador " + indexJugador + " es de tipus JUMPER");
         }
     }

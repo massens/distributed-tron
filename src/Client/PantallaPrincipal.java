@@ -130,31 +130,8 @@ public class PantallaPrincipal {
         labelCheck.setFont(new Font("Helvetica Neue Regular", 3, 18));
         labelCheck.setForeground(Color.RED);
 
-        //Estat jugadors
-        label_player1 = new JLabel("Me", Label.LEFT);
-        label_player1.setBounds(320, 540, 220, 220);
-        label_player1.setFont(new Font("Helvetica Neue Regular", 1, 14));
-        label_player1.setForeground(Color.WHITE);
-
-        label_player2 = new JLabel("Opponent", Label.LEFT);
-        label_player2.setBounds(490, 540, 220, 220);
-        label_player2.setFont(new Font("Helvetica Neue Regular", 1, 14));
-        label_player2.setForeground(Color.WHITE);
-
-        label_state1 = new JLabel();
-        label_state2 = new JLabel();
-        //condicions online-offline
-        online = "/Recursos/State_online.png";
-        offline = "/Recursos/State_offline.png";
-        img_state1 = new ImageIcon(getClass().getResource(online));
-        ImageIcon img_stater = new ImageIcon(img_state1.getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
-        label_state1.setIcon(img_stater);
-        label_state1.setBounds(380,635,35,35);
         
-        img_state2 = new ImageIcon(getClass().getResource(offline));
-        ImageIcon img_stateR = new ImageIcon(img_state2.getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
-        label_state2.setIcon(img_stateR);
-        label_state2.setBounds(530,632,35,35);
+        
 
         
         panell_fons.add(play);
@@ -163,10 +140,7 @@ public class PantallaPrincipal {
         panell_fons.add(option2);
         panell_fons.add(option3);
         panell_fons.add(labelCheck);
-        panell_fons.add(label_player1);
-        panell_fons.add(label_player2);
-        panell_fons.add(label_state1);
-        panell_fons.add(label_state2);
+        
 
     }
 

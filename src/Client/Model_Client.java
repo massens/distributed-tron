@@ -39,7 +39,7 @@ public class Model_Client extends Observable {
     }
 
     //Funcions especials per tractar dades
-    public void dibuixaLineas(int[] posicions) {
+    public void afegeixPosicio(int[] posicions) {
 
         if (Arrays.equals(posicions, Const.FINISH_CODE)) {
             //Acaba la frame del joc

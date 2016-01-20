@@ -110,7 +110,6 @@ public class ServidorNIO extends Thread implements Observer {
             controlador.inici();
             
             //Fem Broadcast de les millors puntuacions
-            //
             int[] score = model.getBestScore();
             enviar(new int[] {Const.ENVIA_PUNTIACIONS, Const.ENVIA_PUNTIACIONS, score[0], score[1]});
         }

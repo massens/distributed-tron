@@ -11,7 +11,7 @@ public class Controlador_EntradaClient implements KeyListener{
 	protected ClientStream comunicacions;
 	protected Vista_Client vista;
 	protected Model_Client model;
-	protected int provisional_Direction1;
+	protected int provisional_key;
 
 	public Controlador_EntradaClient(Vista_Client vista, Model_Client model, ClientStream comunicacions){
 		this.vista = vista;
@@ -20,24 +20,24 @@ public class Controlador_EntradaClient implements KeyListener{
 
 		vista.afegirControlador(this);
 
-		provisional_Direction1 = Const.NOACTION;
+		provisional_key = Const.NOACTION;
 	}
 
 
 	public void keyPressed(KeyEvent e) {
             
 		if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_W) {
-			provisional_Direction1 = Const.UP;
+			provisional_key = Const.UP;
 		} else if (e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_S) {
-				provisional_Direction1 = Const.DOWN;
+				provisional_key = Const.DOWN;
 		} else if (e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_D) {
-				provisional_Direction1 = Const.RIGHT;
+				provisional_key = Const.RIGHT;
 		} else if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_A) {
-				provisional_Direction1 = Const.LEFT;
+				provisional_key = Const.LEFT;
 		} else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-                                provisional_Direction1 = Const.SPACEBAR;
+                                provisional_key = Const.SPACEBAR;
                 }
-                comunicacions.enviar(provisional_Direction1);
+                comunicacions.enviar(provisional_key);
 
 	}
 
