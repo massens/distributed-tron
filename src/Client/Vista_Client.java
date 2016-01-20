@@ -76,13 +76,14 @@ public class Vista_Client implements Observer {
     }
     
     public void paintScores(int[] scores){
+        //[!] s'ha d'executar al thread d'events!!!!!
         score1.setText(""+scores[0]);
         score2.setText(""+scores[1]);
 
     }
 
     //--------------------------------------------
-    //				Panell Pintar
+    //			Panell Pintar
     //--------------------------------------------
     class PanellPintar extends JPanel {
 

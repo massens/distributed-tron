@@ -18,11 +18,11 @@ public class AccioBomber implements AccioEspecial {
                     if (((jug.getCurrentDirection() == Const.UP || jug.getCurrentDirection() == Const.DOWN) && i == 0)
                             || (jug.getCurrentDirection() == Const.LEFT || jug.getCurrentDirection() == Const.RIGHT) && j == 0) {
                         //Do nothing
+                        
                     } else {
-                        jug.incPositionsToSend(1);
-
                         jug.addCoordToPath(new Coord(jug.getCentre().getX()+i,jug.getCentre().getY()+j));
-                                                
+                        jug.incPositionsToSend(1);
+              
                     }
                 }
             }

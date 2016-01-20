@@ -46,6 +46,7 @@ public class Model_Client extends Observable {
             v.closeFrame();
             return;
         }
+        
         centrex1 = posicions[0];
         centrey1 = posicions[1];
         centrex2 = posicions[2];

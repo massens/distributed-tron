@@ -33,6 +33,9 @@ public class Jugador {
     
     public Jugador(){
         path = new ArrayList<Coord>();
+        
+        //Per defecte, el tipus de Jugador és NORMAL. El client ho pot canviar
+        setTipusJugador(Const.NORMAL);
     }
 
     public ArrayList<Coord> getPath() {

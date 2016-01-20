@@ -29,10 +29,8 @@ public class Client {
         controladorComms.start();
     }
 
-    public ClientStream getClientStream() {
-        
+    public ClientStream getClientStream() {¡
         return clientComunicacions;
-        
     }
     
         
